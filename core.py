@@ -115,6 +115,13 @@ def price_alert_monitor():
         sleep(1)
 
 
+def price_on_request():
+    a1 = get_price_of_currency("BTC")
+    current_price = a1.split(" ")
+    current_price_print = current_price[0] + " is " + current_price[1] + " USD"
+    return current_price_print
+
+
 # here the prices of all cryptocurrencies are checked and warnings are issued if the price of
 # a cryptocurrency goes up strongly.
 
@@ -192,6 +199,10 @@ def handle_message(update, context):
     update.message.reply_text(response)
 
 
+def price_command(update, context):
+    update.message.reply_text(price_on_request())
+
+
 def change_settings(update, context):
     json_id = update
 
@@ -232,6 +243,7 @@ def main():
 
     dp.add_handler(CommandHandler("start", start_command))
     dp.add_handler(CommandHandler("help", help_command))
+    dp.add_handler(CommandHandler("price", price_command))
 
     dp.add_handler(MessageHandler(Filters.text, change_settings))
 
