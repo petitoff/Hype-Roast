@@ -113,7 +113,7 @@ def price_alert_monitor():
                 count = 0
                 buy_price_before = 0
 
-        sleep(1)
+        sleep(60)
 
 
 def price_on_request():
@@ -160,7 +160,7 @@ def main_alert_price_all_crypto():
                 bot.send_message(chat_id=1181399908, text=f"Alert price {name_crypto} {percentage}% | {b1[i]}")
                 break
 
-        sleep(600)
+        sleep(300)
 
 
 def check_all_price():
