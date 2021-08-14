@@ -15,7 +15,7 @@ lst_of_currencies_and_price = []
 
 sell_price = 1.1
 buy_price = 1.1
-time_update = 120
+time_update = 600
 
 """
 This is place for coinbase part
@@ -148,10 +148,16 @@ def main_alert_price_all_crypto():
             name_crypto = ""
             percentage = percentage_calculator(b1[i], a1[i])
             if percentage >= 10:
-                for key1, value1 in dct_of_currencies_and_price_current:
+                for key1, value1 in dct_of_currencies_and_price_current.items():
                     if b1[i] == value1:
                         name_crypto = key1
-                bot.send_message(chat_id=1181399908, text=f"Alert price of {name_crypto} {percentage}% | {b1[i]}")
+                bot.send_message(chat_id=1181399908, text=f"Alert price {name_crypto} {percentage}% | {b1[i]}")
+                break
+            elif percentage <= -10:
+                for key1, value1 in dct_of_currencies_and_price_current.items():
+                    if b1[i] == value1:
+                        name_crypto = key1
+                bot.send_message(chat_id=1181399908, text=f"Alert price {name_crypto} {percentage}% | {b1[i]}")
                 break
 
         sleep(600)
