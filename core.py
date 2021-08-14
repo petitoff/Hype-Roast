@@ -113,7 +113,7 @@ def price_alert_monitor():
                 count = 0
                 buy_price_before = 0
 
-        sleep(1)
+        sleep(60)
 
 
 def price_on_request():
