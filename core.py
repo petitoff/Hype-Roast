@@ -68,8 +68,7 @@ def live_price_of_btc():
 
         bot.send_message(chat_id=1181399908, text=current_price_print)
 
-        for i in range(time_update):
-            sleep(1)
+        time.sleep(time_update)
 
 
 def percentage_calculator(current_price, start_price):
