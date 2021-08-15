@@ -94,10 +94,8 @@ def price_alert_monitor():
             if a is True:
                 a = price_lvl_alert(float(current_price[1]), current_price_print, sell_price, buy_price)
                 if a == 1:
-                    bot.send_message(chat_id=1181399908, text="Update brake point of price.")
                     sell_price_before = sell_price
                 elif a == 2:
-                    bot.send_message(chat_id=1181399908, text="Update brake point of price.")
                     buy_price_before = buy_price
         if a == 1:
             if sell_price_before != sell_price:
@@ -267,9 +265,11 @@ def main():
 def price_lvl_alert(price, price_print, up_lvl, down_lvl):
     if float(price) >= up_lvl:
         alert_price(f"Alert price for sell! The price has hit the high end. | {price_print}")
+        alert_price(f"Update brake point of price.")
         return 1
     elif float(price) <= down_lvl:
         alert_price(f"Alert price for buy! The price has hit the low end. | {price_print}")
+        alert_price(f"Update brake point of price.")
         return 2
     else:
         return True
