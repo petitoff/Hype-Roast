@@ -220,7 +220,7 @@ def change_settings(update, context):
         update.message.reply_text("You don't have permission.")
         return
 
-    global sell_price, buy_price, time_update
+    global sell_price, buy_price, time_update, lst_of_alert_crypto
     text = str(update.message.text).lower()
     if text[:2] == "up":
         if float(text[2:]) > buy_price:
@@ -241,6 +241,9 @@ def change_settings(update, context):
             update.message.reply_text(f"Time set to: {time_update} seconds")
         except ValueError:
             update.message.reply_text("Can't to be float or int.")
+    elif text == "clear1":
+        update.message.reply_text("The list of alerts has been cleared")
+        lst_of_alert_crypto.clear()
 
 
 def alert_price(message_alert):
