@@ -138,8 +138,6 @@ def main_alert_price_all_crypto():
 
         a1 = list(dct_of_currencies_and_price_start.values())  # list of values from dct
         b1 = list(dct_of_currencies_and_price_current.values())  # list of values from dct
-        print(dct_of_currencies_and_price_start)
-        print(dct_of_currencies_and_price_current)
 
         for i in range(len(a1)):
             name_crypto = ""
