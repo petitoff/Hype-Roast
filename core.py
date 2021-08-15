@@ -12,6 +12,7 @@ from telegram.ext import *
 # here create global variables for coinbase module
 lst_of_available_currencies = []
 lst_of_currencies_and_price = []
+lst_of_alert_crypto = []
 
 sell_price = 1.1
 buy_price = 1.1
@@ -127,7 +128,7 @@ def price_on_request():
 # a cryptocurrency goes up strongly.
 
 def main_alert_price_all_crypto():
-    global lst_of_available_currencies, lst_of_currencies_and_price
+    global lst_of_available_currencies, lst_of_currencies_and_price, lst_of_alert_crypto
     get_all_available_crypto()  # only once is needed
 
     dct_of_currencies_and_price_start = check_all_price()
@@ -151,16 +152,18 @@ def main_alert_price_all_crypto():
                 for key1, value1 in dct_of_currencies_and_price_current.items():
                     if b1[i] == value1:
                         name_crypto = key1
-                bot.send_message(chat_id=1181399908, text=f"Alert price {name_crypto} {percentage}% | {b1[i]}")
-                break
+                if name_crypto not in lst_of_alert_crypto:
+                    bot.send_message(chat_id=1181399908, text=f"Alert price {name_crypto} {percentage}% | {b1[i]}")
+                    lst_of_alert_crypto.append(name_crypto)
             elif percentage <= -10:
                 for key1, value1 in dct_of_currencies_and_price_current.items():
                     if b1[i] == value1:
                         name_crypto = key1
-                bot.send_message(chat_id=1181399908, text=f"Alert price {name_crypto} {percentage}% | {b1[i]}")
-                break
+                if name_crypto not in lst_of_alert_crypto:
+                    bot.send_message(chat_id=1181399908, text=f"Alert price {name_crypto} {percentage}% | {b1[i]}")
+                    lst_of_alert_crypto.append(name_crypto)
 
-        sleep(600)
+        sleep(300)
 
 
 def check_all_price():
@@ -217,7 +220,7 @@ def change_settings(update, context):
         update.message.reply_text("You don't have permission.")
         return
 
-    global sell_price, buy_price, time_update
+    global sell_price, buy_price, time_update, lst_of_alert_crypto
     text = str(update.message.text).lower()
     if text[:2] == "up":
         if float(text[2:]) > buy_price:
@@ -238,6 +241,9 @@ def change_settings(update, context):
             update.message.reply_text(f"Time set to: {time_update} seconds")
         except ValueError:
             update.message.reply_text("Can't to be float or int.")
+    elif text == "clear1":
+        update.message.reply_text("The list of alerts has been cleared")
+        lst_of_alert_crypto.clear()
 
 
 def alert_price(message_alert):
