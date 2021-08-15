@@ -73,8 +73,8 @@ def live_price_of_btc():
 
 
 def percentage_calculator(current_price, start_price):
-    current_price = round(float(current_price), 2)
-    start_price = round(float(start_price), 2)
+    current_price = float(current_price)
+    start_price = float(start_price)
     percentage = ((current_price - start_price) / start_price) * 100
     percentage = round(percentage, 2)
     return percentage
@@ -83,7 +83,6 @@ def percentage_calculator(current_price, start_price):
 def price_alert_monitor():
     global sell_price, buy_price
     a = True
-    count = 0
     sell_price_before = 0
     buy_price_before = 0
     while True:
@@ -95,23 +94,18 @@ def price_alert_monitor():
             if a is True:
                 a = price_lvl_alert(float(current_price[1]), current_price_print, sell_price, buy_price)
                 if a == 1:
+                    bot.send_message(chat_id=1181399908, text="Update brake point of price.")
                     sell_price_before = sell_price
                 elif a == 2:
-                    buy_price_before = buy_price
-            else:
-                if count == 0:
-                    count += 1
                     bot.send_message(chat_id=1181399908, text="Update brake point of price.")
-
+                    buy_price_before = buy_price
         if a == 1:
             if sell_price_before != sell_price:
                 a = True
-                count = 0
                 sell_price_before = 0
         elif a == 2:
             if buy_price_before != buy_price:
                 a = True
-                count = 0
                 buy_price_before = 0
 
         sleep(60)
@@ -147,6 +141,7 @@ def main_alert_price_all_crypto():
 
         for i in range(len(a1)):
             name_crypto = ""
+
             percentage = percentage_calculator(b1[i], a1[i])
             if percentage >= 10:
                 for key1, value1 in dct_of_currencies_and_price_current.items():
@@ -163,11 +158,12 @@ def main_alert_price_all_crypto():
                     bot.send_message(chat_id=1181399908, text=f"Alert price {name_crypto} {percentage}% | {b1[i]}")
                     lst_of_alert_crypto.append(name_crypto)
 
-        sleep(300)
+        sleep(1)
 
 
 def check_all_price():
     global lst_of_available_currencies, lst_of_currencies_and_price
+    lst_of_currencies_and_price.clear()
     for i in lst_of_available_currencies:
         try:
             a = get_price_of_currency(i)
@@ -192,11 +188,15 @@ This is place for telegram bot. Put here api key and other custom stuff.
 # here create global variables for telegram module
 
 
-bot = Bot("1947691149:AAF9ZqpE_s43XEflZE5HCAQeNn1_4JrNMJU")
+# bot = Bot("1947691149:AAF9ZqpE_s43XEflZE5HCAQeNn1_4JrNMJU")   # main
+bot = Bot("1968009671:AAFyFLX4efJbsjnRlKeXfSRvXYwJo60Udic")  # dev
 
 
 def start_command(update, context):
     update.message.reply_text("This is premium private bot. You can't use it without permission")
+    # json_id = update
+    # id_of_chat = json_id["message"]["chat"]["id"]
+    # print(id_of_chat)
 
 
 def help_command(update, context):
@@ -251,7 +251,8 @@ def alert_price(message_alert):
 
 
 def main():
-    updater = Updater("1947691149:AAF9ZqpE_s43XEflZE5HCAQeNn1_4JrNMJU", use_context=True)
+    # updater = Updater("1947691149:AAF9ZqpE_s43XEflZE5HCAQeNn1_4JrNMJU", use_context=True) # main
+    updater = Updater("1968009671:AAFyFLX4efJbsjnRlKeXfSRvXYwJo60Udic", use_context=True)  # for dev and test
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler("start", start_command))
