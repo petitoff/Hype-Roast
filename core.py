@@ -14,6 +14,9 @@ lst_of_available_currencies = []
 lst_of_currencies_and_price = []
 lst_of_alert_crypto = []
 
+dct_of_alert_name_percentage = {}
+dct_of_currencies_and_price_current = {}
+
 sell_price = 1.1
 buy_price = 1.1
 time_update = 600
@@ -116,11 +119,15 @@ def price_on_request():
     return current_price_print
 
 
-# here the prices of all cryptocurrencies are checked and warnings are issued if the price of
-# a cryptocurrency goes up strongly.
+"""
+here is the prices of all cryptocurrencies are checked and warnings are issued if the price of
+a cryptocurrency goes up strongly.
+"""
+
 
 def main_alert_price_all_crypto():
-    global lst_of_available_currencies, lst_of_currencies_and_price, lst_of_alert_crypto
+    global lst_of_available_currencies, lst_of_currencies_and_price, lst_of_alert_crypto, \
+        dct_of_currencies_and_price_current
     get_all_available_crypto()  # only once is needed
 
     dct_of_currencies_and_price_start = check_all_price()
@@ -132,6 +139,7 @@ def main_alert_price_all_crypto():
             start_time = time.time()
             dct_of_currencies_and_price_start = check_all_price()
 
+        dct_of_currencies_and_price_current.clear()
         dct_of_currencies_and_price_current = check_all_price()
 
         a1 = list(dct_of_currencies_and_price_start.values())  # list of values from dct
@@ -141,20 +149,24 @@ def main_alert_price_all_crypto():
             name_crypto = ""
 
             percentage = percentage_calculator(b1[i], a1[i])
-            if percentage >= 10:
-                for key1, value1 in dct_of_currencies_and_price_current.items():
-                    if b1[i] == value1:
-                        name_crypto = key1
-                if name_crypto not in lst_of_alert_crypto:
-                    bot.send_message(chat_id=1181399908, text=f"Alert price {name_crypto} {percentage}% | {b1[i]}")
-                    lst_of_alert_crypto.append(name_crypto)
-            elif percentage <= -10:
-                for key1, value1 in dct_of_currencies_and_price_current.items():
-                    if b1[i] == value1:
-                        name_crypto = key1
-                if name_crypto not in lst_of_alert_crypto:
-                    bot.send_message(chat_id=1181399908, text=f"Alert price {name_crypto} {percentage}% | {b1[i]}")
-                    lst_of_alert_crypto.append(name_crypto)
+            if percentage >= 0:
+                check_percentage(percentage, b1, i)
+                break
+
+            # if percentage >= 10:
+            #     for key1, value1 in dct_of_currencies_and_price_current.items():
+            #         if b1[i] == value1:
+            #             name_crypto = key1
+            #     if name_crypto not in lst_of_alert_crypto:
+            #         bot.send_message(chat_id=1181399908, text=f"Alert price {name_crypto} {percentage}% | {b1[i]}")
+            #         lst_of_alert_crypto.append(name_crypto)
+            # elif percentage <= -10:
+            #     for key1, value1 in dct_of_currencies_and_price_current.items():
+            #         if b1[i] == value1:
+            #             name_crypto = key1
+            #     if name_crypto not in lst_of_alert_crypto:
+            #         bot.send_message(chat_id=1181399908, text=f"Alert price {name_crypto} {percentage}% | {b1[i]}")
+            #         lst_of_alert_crypto.append(name_crypto)
 
         sleep(1)
 
@@ -177,6 +189,27 @@ def convert(lst):
     # convert list to dictionary
     res_dct = {lst[i]: lst[i + 1] for i in range(0, len(lst), 2)}
     return res_dct
+
+
+def check_percentage(percentage, b1, i):
+    global dct_of_currencies_and_price_current, lst_of_alert_crypto, dct_of_alert_name_percentage
+    name_crypto = ""
+    d1 = {}
+    for key1, value1 in dct_of_currencies_and_price_current.items():
+        if b1[i] == value1:
+            name_crypto = key1
+
+    if name_crypto not in dct_of_alert_name_percentage:
+        d1[name_crypto] = list(percentage)
+        dct_of_alert_name_percentage.update(d1)
+        bot.send_message(chat_id=1181399908, text=f"Alert price {name_crypto} {percentage}% | {b1[i]}")
+    elif name_crypto in dct_of_alert_name_percentage:
+        for i1 in dct_of_alert_name_percentage[name_crypto]:
+            if i1 != percentage:
+                dct_of_alert_name_percentage[name_crypto].append(percentage)
+                bot.send_message(chat_id=1181399908, text=f"Alert price {name_crypto} {percentage}% | {b1[i]}")
+            else:
+                pass
 
 
 """
