@@ -200,7 +200,7 @@ def check_percentage(percentage, b1, i):
             name_crypto = key1
 
     if name_crypto not in dct_of_alert_name_percentage:
-        d1[name_crypto] = list(percentage)
+        d1[name_crypto] = list(str(percentage))
         dct_of_alert_name_percentage.update(d1)
         bot.send_message(chat_id=1181399908, text=f"Alert price {name_crypto} {percentage}% | {b1[i]}")
     elif name_crypto in dct_of_alert_name_percentage:
