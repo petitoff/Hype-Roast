@@ -209,13 +209,10 @@ def check_percentage(percentage, b1, i):
         bot.send_message(chat_id=1181399908,
                          text=f"Alert price {name_crypto} {percentage}% | {price}")
     elif name_crypto in dct_of_alert_name_percentage:
-        for i1 in dct_of_alert_name_percentage[name_crypto]:
-            print(i1)
-            print(int(percentage))
-            if i1 != int(percentage):
-                dct_of_alert_name_percentage[name_crypto].append(int(percentage))
-                bot.send_message(chat_id=1181399908,
-                                 text=f"Alert price {name_crypto} {percentage}% | {price}")
+        if int(percentage) not in dct_of_alert_name_percentage[name_crypto]:
+            dct_of_alert_name_percentage[name_crypto].append(int(percentage))
+            bot.send_message(chat_id=1181399908,
+                             text=f"Alert price {name_crypto} {percentage}% | {price}")
 
 
 """
