@@ -1,7 +1,7 @@
 from core import *
 
 thread1 = Thread(target=main)  # telegram bot and sending message (all api and other main def)
-thread2 = Thread(target=live_price_of_btc)  # get live price of BTC and send message via telegram
+thread2 = Thread(target=live_price_of_cryptocurrencies)  # get live price of BTC and send message via telegram
 thread3 = Thread(target=price_alert_monitor)  # get alert price if BTC break set price via telegram
 thread4 = Thread(target=main_alert_price_all_crypto)  # get alert price of all crypto if price is fast change
 
