@@ -20,7 +20,7 @@ dct_of_currencies_and_price_current = {}
 
 sell_price = 1.1
 buy_price = 1.1
-time_update = 5
+time_update = 600
 time_update_stop = False
 name_of_cryptocurrencies_to_live_price = ""
 
