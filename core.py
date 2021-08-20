@@ -133,8 +133,8 @@ def price_alert_monitor():
         sleep(30)
 
 
-def price_on_request():
-    a1 = get_price_of_currency("BTC")
+def price_on_request(name):
+    a1 = get_price_of_currency(name)
     current_price = a1.split(" ")
     current_price_print = current_price[0] + " is " + current_price[1] + " USD"
     return current_price_print
@@ -254,7 +254,7 @@ def handle_message(update, context):
 
 
 def price_command(update, context):
-    update.message.reply_text(price_on_request())
+    update.message.reply_text(price_on_request("BTC"))
 
 
 def change_settings(update, context):
@@ -302,6 +302,8 @@ def change_settings(update, context):
     elif text[:6] == "remove":
         lst_name_of_cryptocurrencies_to_live_price.remove(text[6:])
         update.message.reply_text(f"{text[6:]} has been remove from live price.")
+    elif text[:5] == "price":
+        update.message.reply_text(price_on_request(text[5:]))
 
 
 def alert_price(message_alert):
