@@ -202,6 +202,11 @@ def check_percentage(percentage, b1, i):
     name_crypto = ""
     d1 = {}
     lst = []
+
+    for key, value in dct_of_alert_name_percentage.items():
+        if len(value) > 4:
+            dct_of_alert_name_percentage[key].pop(0)
+
     price = round(float(b1[i]), 2)
     for key1, value1 in dct_of_currencies_and_price_current.items():
         if b1[i] == value1:
