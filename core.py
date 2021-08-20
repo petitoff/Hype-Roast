@@ -92,7 +92,12 @@ def live_price_of_cryptocurrencies():
 
             bot.send_message(chat_id=1181399908, text=current_price_print)
 
-        time.sleep(time_update)
+        count = 0
+        while True:
+            count += 1
+            if count >= time_update:
+                break
+            time.sleep(1)
 
 
 def percentage_calculator(current_price, start_price):
