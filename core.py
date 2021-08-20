@@ -12,7 +12,6 @@ from telegram.ext import *
 # here create global variables for coinbase module
 lst_of_available_currencies = []
 lst_of_currencies_and_price = []
-lst_of_alert_crypto = []
 lst_name_of_cryptocurrencies_to_live_price = ["BTC"]
 
 dct_of_alert_name_percentage = {}
@@ -147,8 +146,7 @@ a cryptocurrency goes up strongly.
 
 
 def main_alert_price_all_crypto():
-    global lst_of_available_currencies, lst_of_currencies_and_price, lst_of_alert_crypto, \
-        dct_of_currencies_and_price_current
+    global lst_of_available_currencies, lst_of_currencies_and_price, dct_of_currencies_and_price_current
     get_all_available_crypto()  # only once is needed
 
     dct_of_currencies_and_price_start = check_all_price()
@@ -198,7 +196,7 @@ def convert(lst):
 
 
 def check_percentage(percentage, b1, i):
-    global dct_of_currencies_and_price_current, lst_of_alert_crypto, dct_of_alert_name_percentage
+    global dct_of_currencies_and_price_current, dct_of_alert_name_percentage
     name_crypto = ""
     d1 = {}
     lst = []
@@ -264,7 +262,7 @@ def change_settings(update, context):
         update.message.reply_text("You don't have permission.")
         return
 
-    global sell_price, buy_price, time_update, lst_of_alert_crypto, time_update_stop, \
+    global sell_price, buy_price, time_update, time_update_stop, \
         lst_name_of_cryptocurrencies_to_live_price
 
     text = str(update.message.text).lower()
@@ -287,9 +285,6 @@ def change_settings(update, context):
             update.message.reply_text(f"Time set to: {time_update} seconds")
         except ValueError:
             update.message.reply_text("Can't to be float or int.")
-    elif text == "clear1":
-        update.message.reply_text("The list of alerts has been cleared")
-        lst_of_alert_crypto.clear()
     elif text[:6] == "tstart":
         time_update_stop = False
         update.message.reply_text("Send message with live price of crypto is start.")
