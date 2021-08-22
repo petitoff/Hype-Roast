@@ -207,7 +207,7 @@ def check_percentage(percentage, b1, i):
     lst = []
 
     for key, value in dct_of_alert_name_percentage.items():
-        if len(value) > 4:
+        if len(value) > 2:
             dct_of_alert_name_percentage[key].pop(0)
 
     price = round(float(b1[i]), 2)
