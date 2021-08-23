@@ -16,6 +16,7 @@ lst_name_of_cryptocurrencies_to_live_price = ["BTC"]
 
 dct_of_alert_name_percentage = {}
 dct_of_currencies_and_price_current = {}
+dct_of_currencies_and_price_main = {}
 
 sell_price = 1.1
 buy_price = 1.1
@@ -29,6 +30,9 @@ This is place for coinbase part
 
 
 def get_all_available_crypto():
+    global lst_of_available_currencies
+    lst_of_available_currencies.clear()
+
     url = 'https://api.pro.coinbase.com/currencies'
     response = requests.get(url).json()
 
@@ -53,6 +57,36 @@ def get_price_of_currency(name):
             return a
     except urllib.error.HTTPError:
         pass
+
+
+def coinbase_get_price():
+    global lst_of_available_currencies, lst_of_currencies_and_price, dct_of_currencies_and_price_main
+    get_all_available_crypto()  # runs a function that gets the names of all available currencies
+
+    while True:
+        lst_of_currencies_and_price.clear()
+        for i in lst_of_available_currencies:
+            try:
+                name_price = get_price_of_currency(i)
+                lst_of_currencies_and_price.extend(name_price.split(" "))
+            except AttributeError:
+                pass
+
+        dct_name_price = convert(lst_of_currencies_and_price)
+
+        if dct_of_currencies_and_price_main:
+            for key, value in dct_name_price.items():
+                dct_of_currencies_and_price_main[key].append(round(float(value), 4))
+        else:
+            for key, value in dct_name_price.items():
+                d_let1 = {}
+                lst_let1 = [round(float(value), 4)]
+
+                d_let1[key] = lst_let1
+                dct_of_currencies_and_price_main.update(d_let1)
+
+        print(dct_of_currencies_and_price_main)
+        sleep(30)
 
 
 """
@@ -138,10 +172,13 @@ def price_alert_monitor():
 
 
 def price_on_request(name):
-    a1 = get_price_of_currency(name)
-    current_price = a1.split(" ")
-    current_price_print = current_price[0] + " is " + current_price[1] + " USD"
-    return current_price_print
+    try:
+        a1 = get_price_of_currency(name)
+        current_price = a1.split(" ")
+        current_price_print = current_price[0] + " is " + current_price[1] + " USD"
+        return current_price_print
+    except AttributeError:
+        return "You must enter a valid cryptocurrency name"
 
 
 """
@@ -272,13 +309,17 @@ def change_settings(update, context):
 
     text = str(update.message.text).lower()
     if text[:2] == "up":
-        if float(text[2:]) > buy_price:
+        if text[2:] == "":
+            update.message.reply_text("Enter a value")
+        elif float(text[2:]) > buy_price:
             sell_price = float(text[2:])
             update.message.reply_text(f"Price up set to: {sell_price}")
         else:
             update.message.reply_text("Sell price can't be lower than buy price")
     elif text[:4] == "down":
-        if float(text[4:]) < sell_price:
+        if text[4:] == "":
+            update.message.reply_text("Enter a value")
+        elif float(text[4:]) < sell_price:
             buy_price = float(text[4:])
             update.message.reply_text(f"Price down set to: {buy_price}")
         else:
@@ -289,7 +330,7 @@ def change_settings(update, context):
             time_update = time_update * 60
             update.message.reply_text(f"Time set to: {time_update} seconds")
         except ValueError:
-            update.message.reply_text("Can't to be float or int.")
+            update.message.reply_text("Can't to be float or empty.")
     elif text[:6] == "tstart":
         time_update_stop = False
         update.message.reply_text("Send message with live price of crypto is start.")
@@ -310,7 +351,7 @@ def alert_price(message_alert):
     bot.send_message(chat_id=1181399908, text=message_alert)
 
 
-def main():
+def telegram_main():
     # updater = Updater("1947691149:AAF9ZqpE_s43XEflZE5HCAQeNn1_4JrNMJU", use_context=True) # main
     updater = Updater("1968009671:AAFyFLX4efJbsjnRlKeXfSRvXYwJo60Udic", use_context=True)  # for dev and test
     dp = updater.dispatcher
