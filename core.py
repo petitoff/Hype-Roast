@@ -25,7 +25,8 @@ time_update_stop = False
 name_of_cryptocurrencies_to_live_price = ""
 
 """
-This is place for coinbase part
+This is place for coinbase part. This is where the availability of cryptocurrencies and their current prices 
+are checked.
 """
 
 
@@ -60,19 +61,19 @@ def get_price_of_currency(name):
 
 
 def coinbase_get_price():
-    global lst_of_available_currencies, lst_of_currencies_and_price, dct_of_currencies_and_price_main
+    global lst_of_available_currencies, dct_of_currencies_and_price_main
     get_all_available_crypto()  # runs a function that gets the names of all available currencies
 
     while True:
-        lst_of_currencies_and_price.clear()
+        lst_local_of_currencies_and_price = []
         for i in lst_of_available_currencies:
             try:
                 name_price = get_price_of_currency(i)
-                lst_of_currencies_and_price.extend(name_price.split(" "))
+                lst_local_of_currencies_and_price.extend(name_price.split(" "))
             except AttributeError:
                 pass
 
-        dct_name_price = convert(lst_of_currencies_and_price)
+        dct_name_price = convert(lst_local_of_currencies_and_price)
 
         if dct_of_currencies_and_price_main:
             for key, value in dct_name_price.items():
@@ -85,7 +86,7 @@ def coinbase_get_price():
                 d_let1[key] = lst_let1
                 dct_of_currencies_and_price_main.update(d_let1)
 
-        print(dct_of_currencies_and_price_main)
+        # print(dct_of_currencies_and_price_main)
         sleep(30)
 
 
