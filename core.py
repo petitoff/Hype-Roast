@@ -24,6 +24,8 @@ time_update = 600
 time_update_stop = False
 name_of_cryptocurrencies_to_live_price = ""
 
+count_coinbase_main_1 = 0
+
 """
 This is place for coinbase part. This is where the availability of cryptocurrencies and their current prices 
 are checked.
@@ -42,7 +44,7 @@ def get_all_available_crypto():
             lst_of_available_currencies.append(response[i]['id'])
 
 
-def get_price_of_currency(name):
+def get_price_of_currency_from_coinbase(name):
     # name is id of crypto
     # you will get name and price of crypto in string type
     url = f"https://api.coinbase.com/v2/prices/{name}-USD/spot"
@@ -60,15 +62,25 @@ def get_price_of_currency(name):
         pass
 
 
+def get_currently_price_of_currency(name):
+    global dct_of_currencies_and_price_main
+
+    price = dct_of_currencies_and_price_main[name][-1]
+    return price
+
+
 def coinbase_get_price():
-    global lst_of_available_currencies, dct_of_currencies_and_price_main
+    global lst_of_available_currencies, dct_of_currencies_and_price_main, count_coinbase_main_1
+
     get_all_available_crypto()  # runs a function that gets the names of all available currencies
 
     while True:
         lst_local_of_currencies_and_price = []
+        # creates a list with name and price. This is a temporary list that is needed to create a dictionary
+
         for i in lst_of_available_currencies:
             try:
-                name_price = get_price_of_currency(i)
+                name_price = get_price_of_currency_from_coinbase(i)
                 lst_local_of_currencies_and_price.extend(name_price.split(" "))
             except AttributeError:
                 pass
@@ -87,6 +99,7 @@ def coinbase_get_price():
                 dct_of_currencies_and_price_main.update(d_let1)
 
         # print(dct_of_currencies_and_price_main)
+        count_coinbase_main_1 = 1
         sleep(30)
 
 
@@ -100,30 +113,32 @@ def live_price_of_cryptocurrencies():
 
     dct_start_price = {}
     d1 = {}
+    start_time = time.time()
 
-    a1 = get_price_of_currency("BTC")
-    start_price = a1.split(" ")
-    d1[start_price[0]] = float(start_price[1])
-    dct_start_price.update(d1)
     while True:
         if time_update_stop is True:
+            # This function can be paused if the user so wishes. This line of code makes it possible.
             while True:
                 if time_update_stop is False:
                     break
                 sleep(10)
 
+        current_time = time.time()
+        current_time -= start_time
+        if current_time >= 86400:
+            start_time = time.time()
+            dct_start_price.clear()
+
         for i in lst_name_of_cryptocurrencies_to_live_price:
             name = i.upper()
             if name not in dct_start_price.keys():
-                a1 = get_price_of_currency(i)
-                start_price = a1.split(" ")
-                d1[start_price[0]] = float(start_price[1])
+                start_price = get_currently_price_of_currency(name)
+                d1[name] = start_price
                 dct_start_price.update(d1)
 
-            a = get_price_of_currency(name)
-            current_price = a.split(" ")
-            percentage = percentage_calculator(current_price[1], dct_start_price[name])
-            current_price_print = current_price[0] + " " + str(percentage) + "% | " + current_price[1] + " USD"
+            current_price = get_currently_price_of_currency(name)
+            percentage = percentage_calculator(current_price, dct_start_price[name])
+            current_price_print = name + " " + str(percentage) + "% | " + str(current_price) + " USD"
 
             bot.send_message(chat_id=1181399908, text=current_price_print)
 
@@ -149,13 +164,12 @@ def price_alert_monitor():
     sell_price_before = 0
     buy_price_before = 0
     while True:
-        a1 = get_price_of_currency("BTC")
-        current_price = a1.split(" ")
-        current_price_print = current_price[0] + " is " + current_price[1] + " USD"
+        current_price = get_currently_price_of_currency("BTC")
+        current_price_print = "BTC is " + str(current_price) + " USD"
 
         if sell_price != 1.1 and buy_price != 1.1:
             if a is True:
-                a = price_lvl_alert(float(current_price[1]), current_price_print, sell_price, buy_price)
+                a = price_lvl_alert(current_price, current_price_print, sell_price, buy_price)
                 if a == 1:
                     sell_price_before = sell_price
                 elif a == 2:
@@ -174,7 +188,7 @@ def price_alert_monitor():
 
 def price_on_request(name):
     try:
-        a1 = get_price_of_currency(name)
+        a1 = get_price_of_currency_from_coinbase(name)
         current_price = a1.split(" ")
         current_price_print = current_price[0] + " is " + current_price[1] + " USD"
         return current_price_print
@@ -223,7 +237,7 @@ def check_all_price():
     lst_of_currencies_and_price.clear()
     for i in lst_of_available_currencies:
         try:
-            a = get_price_of_currency(i)
+            a = get_price_of_currency_from_coinbase(i)
             lst_of_currencies_and_price.extend(a.split(" "))
         except AttributeError:
             pass
