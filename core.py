@@ -65,8 +65,11 @@ def get_price_of_currency_from_coinbase(name):
 def get_currently_price_of_currency(name):
     global dct_of_currencies_and_price_main
 
-    price = dct_of_currencies_and_price_main[name][-1]
-    return price
+    try:
+        price = dct_of_currencies_and_price_main[name.upper()][-1]
+        return price
+    except KeyError:
+        return "Wait a moment and try again. The price has not yet been downloaded from API."
 
 
 def coinbase_get_price():
@@ -189,11 +192,14 @@ def price_alert_monitor():
 
 
 def price_on_request(name):
+    # This function If the user sends a message "Price [Name]" returns the value (price) cryptos.
     try:
-        a1 = get_price_of_currency_from_coinbase(name)
-        current_price = a1.split(" ")
-        current_price_print = current_price[0] + " is " + current_price[1] + " USD"
-        return current_price_print
+        price = get_currently_price_of_currency(name)
+        if type(price) is int or type(price) is float:
+            current_price_print = name.upper() + " is " + str(price) + " USD"
+            return current_price_print
+        else:
+            return price
     except AttributeError:
         return "You must enter a valid cryptocurrency name"
 
