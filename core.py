@@ -104,7 +104,7 @@ def coinbase_get_price():
 
 
 """
-This is place for crypto, math and other function. Here you should put functions that will be executed in main.py.
+#######################################################
 """
 
 
@@ -299,7 +299,7 @@ def start_command(update, context):
 
 
 def help_command(update, context):
-    update.message.reply_text("Available commands: up, down, time")
+    update.message.reply_text("This is not working.")
 
 
 def handle_message(update, context):
@@ -323,7 +323,10 @@ def change_settings(update, context):
         lst_name_of_cryptocurrencies_to_live_price
 
     text = str(update.message.text).lower()
-    if text[:2] == "up":
+    if text[:4] == "help":
+        update.message.reply_text("You can use:")
+        update.message.reply_text("up => e.g. => [up4000] | This is for the upper limit of the price.")
+    elif text[:2] == "up":
         if text[2:] == "":
             update.message.reply_text("Enter a value")
         elif float(text[2:]) > buy_price:
@@ -334,6 +337,8 @@ def change_settings(update, context):
     elif text[:4] == "down":
         if text[4:] == "":
             update.message.reply_text("Enter a value")
+        elif sell_price == 1.1:
+            update.message.reply_text("First, establish the upper limit")
         elif float(text[4:]) < sell_price:
             buy_price = float(text[4:])
             update.message.reply_text(f"Price down set to: {buy_price}")
