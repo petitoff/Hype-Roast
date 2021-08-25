@@ -106,7 +106,7 @@ def coinbase_get_price():
 """
 Here there is a function that checks if the designated "breakpoint" values have not been reached.
 Here also takes place to send a live price.
-Auxiliary functions such as percent counting
+Auxiliary functions such as percent counting.
 """
 
 
