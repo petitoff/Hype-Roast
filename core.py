@@ -104,7 +104,7 @@ def coinbase_get_price():
 
 
 """
-#######################################################
+Here there is a function that checks if the designated "breakpoint" values have not been reached.
 """
 
 
