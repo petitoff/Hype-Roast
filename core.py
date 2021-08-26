@@ -9,6 +9,9 @@ from threading import Thread
 from telegram import *
 from telegram.ext import *
 
+from coinbase.wallet.client import Client
+from coinbase.wallet.error import AuthenticationError
+
 # here create global variables for coinbase module
 lst_of_available_currencies = []
 lst_of_currencies_and_price = []
@@ -104,6 +107,32 @@ def coinbase_get_price():
         # print(dct_of_currencies_and_price_main)
         count_coinbase_main_1 = 1
         sleep(30)
+
+
+"""
+coinbase convert, buy and sell
+"""
+
+
+class Coinbase:
+    def coinbase_import_api(self):
+        with open("key.json", 'r') as f:
+            api_keys = json.loads(f.read())
+            api_key = api_keys["coinbase"]["apiKey"]
+            secret_key = api_keys["coinbase"]["secretKey"]
+
+            return api_key, secret_key
+
+    def coinbase_check_wallet_balance(self, name):
+        # get balance for each wallet
+
+        json_data_wallet = self.client.get_account(name)
+
+    def main_coinbase_api(self):
+        api_key, secret_key = self.coinbase_import_api()
+
+        self.client = Client(api_key, secret_key)
+        self.coinbase_check_wallet_balance()
 
 
 """
