@@ -110,7 +110,7 @@ def coinbase_get_price():
 
 
 """
-coinbase convert, buy and sell
+coinbase convert, buy and sell.
 """
 
 
@@ -126,13 +126,15 @@ class Coinbase:
     def coinbase_check_wallet_balance(self, name):
         # get balance for each wallet
 
-        json_data_wallet = self.client.get_account(name)
+        self.json_data_wallet = self.client.get_account(name)
+
+    def coinbase_convert_on_breakpoint(self, name):
+        self.coinbase_check_wallet_balance(name)
 
     def main_coinbase_api(self):
         api_key, secret_key = self.coinbase_import_api()
 
         self.client = Client(api_key, secret_key)
-        self.coinbase_check_wallet_balance()
 
 
 """
