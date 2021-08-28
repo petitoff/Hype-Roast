@@ -16,6 +16,7 @@ from coinbase.wallet.error import AuthenticationError
 lst_of_available_currencies = []
 lst_of_currencies_and_price = []
 lst_name_of_cryptocurrencies_to_live_price = ["BTC"]
+lst_name_cryptocurrencies_breakpoint = []
 
 dct_of_alert_name_percentage = {}
 dct_of_currencies_and_price_current = {}
@@ -106,7 +107,7 @@ def coinbase_get_price():
 
         # print(dct_of_currencies_and_price_main)
         count_coinbase_main_1 = 1
-        sleep(30)
+        sleep(60)
 
 
 """
