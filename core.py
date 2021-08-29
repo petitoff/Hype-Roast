@@ -275,55 +275,42 @@ class BigDifferencesInPrices:
             self.dct_of_currencies_and_price_current.clear()
             self.dct_of_currencies_and_price_current = self.check_all_price()
 
-            a1 = list(dct_of_currencies_and_price_start.values())  # list of values from dct
-            b1 = list(self.dct_of_currencies_and_price_current.values())  # list of values from dct
+            lst_local_start_price = list(dct_of_currencies_and_price_start.values())  # list of values from dct
+            lst_local_current_price = list(self.dct_of_currencies_and_price_current.values())  # list of values from dct
 
-            # print(a1)
-            # print(b1)
+            for i in range(len(lst_local_start_price)):
+                percentage = percentage_calculator(lst_local_current_price[i], lst_local_start_price[i])
+                if percentage >= 4 or percentage <= -4:
+                    self.check_percentage(percentage, lst_local_current_price[i])
 
-            for i in range(len(a1)):
-                percentage = percentage_calculator(b1[i], a1[i])
-                if percentage >= 5:
-                    self.check_percentage(percentage, b1, i)
-                elif percentage <= -5:
-                    self.check_percentage(percentage, b1, i)
-
-            sleep(1)
+            sleep(10)
 
     def check_all_price(self):
-        global lst_of_available_currencies, dct_of_currencies_and_price_main
+        global dct_of_currencies_and_price_main
 
-        dct_of_currencies_and_price = {}
+        dct_local_of_currencies_and_price = {}
 
         for key, value in dct_of_currencies_and_price_main.items():
             dct_local = {key: value[-1]}
-            dct_of_currencies_and_price.update(dct_local)
+            dct_local_of_currencies_and_price.update(dct_local)
 
-        return dct_of_currencies_and_price
+        return dct_local_of_currencies_and_price
 
-    def check_percentage(self, percentage, b1, i):
+    def check_percentage(self, percentage, lst_local_current_price):
         name_crypto = ""
-        d1 = {}
-        lst = []
 
-        for key, value in self.dct_of_alert_name_percentage.items():
-            if len(value) > 1:
-                self.dct_of_alert_name_percentage[key].pop(0)
-
-        price = round(float(b1[i]), 2)
+        price = round(lst_local_current_price, 2)
         for key1, value1 in self.dct_of_currencies_and_price_current.items():
-            if b1[i] == value1:
+            if lst_local_current_price == value1:
                 name_crypto = key1
 
         if name_crypto not in self.dct_of_alert_name_percentage:
-            lst.append(int(percentage))
-            d1[name_crypto] = lst
-            self.dct_of_alert_name_percentage.update(d1)
+            self.dct_of_alert_name_percentage.update({name_crypto: int(percentage)})
             bot.send_message(chat_id=1181399908,
                              text=f"Alert price {name_crypto} {percentage}% | {price}")
-        elif name_crypto in self.dct_of_alert_name_percentage:
-            if int(percentage) not in self.dct_of_alert_name_percentage[name_crypto]:
-                self.dct_of_alert_name_percentage[name_crypto].append(int(percentage))
+        else:
+            if int(percentage) != self.dct_of_alert_name_percentage[name_crypto]:
+                self.dct_of_alert_name_percentage.update({name_crypto: int(percentage)})
                 bot.send_message(chat_id=1181399908,
                                  text=f"Alert price {name_crypto} {percentage}% | {price}")
 
