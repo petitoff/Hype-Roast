@@ -343,8 +343,8 @@ def handle_message(update, context):
     update.message.reply_text(response)
 
 
-def price_command(update, context):
-    update.message.reply_text(price_on_request("BTC"))
+def status_command(update, context):
+    update.message.reply_text("I'm alive and well.")
 
 
 def change_settings(update, context):
@@ -355,30 +355,36 @@ def change_settings(update, context):
         return
 
     global sell_price, buy_price, time_update, time_update_stop, \
-        lst_name_of_cryptocurrencies_to_live_price
+        lst_name_of_cryptocurrencies_to_live_price, lst_of_available_currencies
 
     text = str(update.message.text).lower()
     if text[:4] == "help":
         update.message.reply_text("You can use:")
         update.message.reply_text("up => e.g. => [up4000] | This is for the upper limit of the price.")
     elif text[:2] == "up":
-        if text[2:] == "":
-            update.message.reply_text("Enter a value")
-        elif float(text[2:]) > buy_price:
-            sell_price = float(text[2:])
-            update.message.reply_text(f"Price up set to: {sell_price}")
-        else:
-            update.message.reply_text("Sell price can't be lower than buy price")
+        try:
+            if text[2:] == "":
+                update.message.reply_text("Enter a value")
+            elif float(text[2:]) > buy_price:
+                sell_price = float(text[2:])
+                update.message.reply_text(f"Price up set to: {sell_price}")
+            else:
+                update.message.reply_text("Sell price can't be lower than buy price")
+        except ValueError:
+            update.message.reply_text("Error! Enter a value")
     elif text[:4] == "down":
-        if text[4:] == "":
-            update.message.reply_text("Enter a value")
-        elif sell_price == 1.1:
-            update.message.reply_text("First, establish the upper limit")
-        elif float(text[4:]) < sell_price:
-            buy_price = float(text[4:])
-            update.message.reply_text(f"Price down set to: {buy_price}")
-        else:
-            update.message.reply_text("Buy price can't be bigger than sell price")
+        try:
+            if text[4:] == "":
+                update.message.reply_text("Enter a value")
+            elif sell_price == 1.1:
+                update.message.reply_text("First, establish the upper limit")
+            elif float(text[4:]) < sell_price:
+                buy_price = float(text[4:])
+                update.message.reply_text(f"Price down set to: {buy_price}")
+            else:
+                update.message.reply_text("Buy price can't be bigger than sell price")
+        except ValueError:
+            update.message.reply_text("Error! Enter a value")
     elif text[:4] == "time":
         try:
             time_update = int(text[4:])
@@ -393,11 +399,18 @@ def change_settings(update, context):
         time_update_stop = True
         update.message.reply_text("Send message with live price of crypto is stop.")
     elif text[:3] == "add":
-        lst_name_of_cryptocurrencies_to_live_price.append(text[3:])
-        update.message.reply_text(f"{text[3:]} has been added to the live price.")
+        if text[3:] in lst_of_available_currencies:
+            lst_name_of_cryptocurrencies_to_live_price.append(text[3:])
+            update.message.reply_text(f"{text[3:]} has been added to the live price.")
+        else:
+            update.message.reply_text("The given cryptocurrency does not exist or has not been loaded yet. "
+                                      "Please try again in a minute!")
     elif text[:6] == "remove":
-        lst_name_of_cryptocurrencies_to_live_price.remove(text[6:])
-        update.message.reply_text(f"{text[6:]} has been remove from live price.")
+        try:
+            lst_name_of_cryptocurrencies_to_live_price.remove(text[6:])
+            update.message.reply_text(f"{text[6:]} has been remove from live price.")
+        except ValueError:
+            update.message.reply_text("The cryptocurrency with the given name is not on the list.")
     elif text[:5] == "price":
         update.message.reply_text(price_on_request(text[5:]))
 
@@ -413,7 +426,7 @@ def telegram_main():
 
     dp.add_handler(CommandHandler("start", start_command))
     dp.add_handler(CommandHandler("help", help_command))
-    dp.add_handler(CommandHandler("price", price_command))
+    dp.add_handler(CommandHandler("status", status_command))
 
     dp.add_handler(MessageHandler(Filters.text, change_settings))
 
