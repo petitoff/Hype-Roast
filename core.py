@@ -12,7 +12,7 @@ from telegram.ext import *
 from coinbase.wallet.client import Client
 from coinbase.wallet.error import AuthenticationError
 
-# here create global variables for coinbase module
+"""here create global variables for coinbase module"""
 lst_of_available_currencies = []
 lst_of_currencies_and_price = []
 lst_name_of_cryptocurrencies_to_live_price = ["BTC"]
@@ -22,13 +22,16 @@ dct_of_alert_name_percentage = {}
 dct_of_currencies_and_price_current = {}
 dct_of_currencies_and_price_main = {}
 
-sell_price = 1.1
-buy_price = 1.1
-time_update = 600
-time_update_stop = False
-name_of_cryptocurrencies_to_live_price = ""
+sell_price = 1.1  # btc breakpoint
+buy_price = 1.1  # btc breakpoint
+time_update = 600  # Every how many seconds a price update is to be sent. This is the default value and can be
+# changed by the user.
+
+time_update_stop = False  # Variable that tells the program whether price updates are to be sent.
 
 count_coinbase_main_1 = 0
+# The variable informs the program whether the value has been downloaded from the API once. If so, the program
+# starts the rest of the threads.
 
 """
 This is place for coinbase part. This is where the availability of cryptocurrencies and their current prices 
@@ -244,7 +247,7 @@ a cryptocurrency goes up strongly.
 
 def main_alert_price_all_crypto():
     global lst_of_available_currencies, lst_of_currencies_and_price, dct_of_currencies_and_price_current
-    get_all_available_crypto()  # only once is needed
+    # get_all_available_crypto()  # only once is needed
 
     dct_of_currencies_and_price_start = check_all_price()
     start_time = time.time()
