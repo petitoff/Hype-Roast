@@ -18,6 +18,8 @@ lst_name_of_cryptocurrencies_to_live_price = ["BTC"]
 lst_name_cryptocurrencies_breakpoint = []
 
 dct_of_currencies_and_price_main = {}
+dct_name_value_breakpoint = {}  # A dictionary that keeps the names and values of cryptocurrencies with levels
+# when an alert is to be triggered.
 
 sell_price = 1.1  # btc breakpoint
 buy_price = 1.1  # btc breakpoint
@@ -208,13 +210,16 @@ def live_price_of_cryptocurrencies():
 
 
 def price_alert_monitor():
-    global sell_price, buy_price
+    global sell_price, buy_price, dct_name_value_breakpoint
     a = True
     sell_price_before = 0
     buy_price_before = 0
+    current_price = float
+    current_price_print = str
     while True:
-        current_price = get_currently_price_of_currency("BTC")
-        current_price_print = "BTC is " + str(current_price) + " USD"
+        for key in dct_name_value_breakpoint.keys():
+            current_price = get_currently_price_of_currency(key)
+            current_price_print = key + " is " + str(current_price) + " USD"
 
         if sell_price != 1.1 and buy_price != 1.1:
             if a is True:
@@ -355,7 +360,7 @@ def change_settings(update, context):
         return
 
     global sell_price, buy_price, time_update, time_update_stop, \
-        lst_name_of_cryptocurrencies_to_live_price, lst_of_available_currencies
+        lst_name_of_cryptocurrencies_to_live_price, lst_of_available_currencies, dct_name_value_breakpoint
 
     text = str(update.message.text).lower()
     if text[:4] == "help":
@@ -363,26 +368,45 @@ def change_settings(update, context):
         update.message.reply_text("up => e.g. => [up4000] | This is for the upper limit of the price.")
     elif text[:2] == "up":
         try:
-            if text[2:] == "":
-                update.message.reply_text("Enter a value")
-            elif float(text[2:]) > buy_price:
-                sell_price = float(text[2:])
-                update.message.reply_text(f"Price up set to: {sell_price}")
+            lst_local_setting = [i for i, ltr in enumerate(text) if ltr == " "]
+            name_crypto = text[3:lst_local_setting[1]].upper()
+            sell_price = float(text[lst_local_setting[1] + 1:])
+
+            if name_crypto not in dct_name_value_breakpoint:
+                dct_name_value_breakpoint.update({name_crypto: {"up": sell_price}})
             else:
-                update.message.reply_text("Sell price can't be lower than buy price")
+                dct_name_value_breakpoint[name_crypto].update({"up": sell_price})
+
+            # if text[2:] == "":
+            #     update.message.reply_text("Enter a value")
+            # elif float(text[2:]) > buy_price:
+            #     sell_price = float(text[2:])
+            #     update.message.reply_text(f"Price up set to: {sell_price}")
+            # else:
+            #     update.message.reply_text("Sell price can't be lower than buy price")
         except ValueError:
-            update.message.reply_text("Error! Enter a value")
+            update.message.reply_text(
+                "Error! Please enter the correct form. If you do not know how, please enter help.")
     elif text[:4] == "down":
         try:
-            if text[4:] == "":
-                update.message.reply_text("Enter a value")
-            elif sell_price == 1.1:
-                update.message.reply_text("First, establish the upper limit")
-            elif float(text[4:]) < sell_price:
-                buy_price = float(text[4:])
-                update.message.reply_text(f"Price down set to: {buy_price}")
+            lst_local_setting = [i for i, ltr in enumerate(text) if ltr == " "]
+            name_crypto = text[4:lst_local_setting[1]].upper()
+            buy_price = float(text[lst_local_setting[1] + 1:])
+
+            if name_crypto not in dct_name_value_breakpoint:
+                dct_name_value_breakpoint.update({name_crypto: {"down": buy_price}})
             else:
-                update.message.reply_text("Buy price can't be bigger than sell price")
+                dct_name_value_breakpoint[name_crypto].update({"down": buy_price})
+
+            # if text[4:] == "":
+            #     update.message.reply_text("Enter a value")
+            # elif sell_price == 1.1:
+            #     update.message.reply_text("First, establish the upper limit")
+            # elif float(text[4:]) < sell_price:
+            #     buy_price = float(text[4:])
+            #     update.message.reply_text(f"Price down set to: {buy_price}")
+            # else:
+            #     update.message.reply_text("Buy price can't be bigger than sell price")
         except ValueError:
             update.message.reply_text("Error! Enter a value")
     elif text[:4] == "time":
