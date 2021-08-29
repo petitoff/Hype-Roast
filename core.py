@@ -14,12 +14,9 @@ from coinbase.wallet.error import AuthenticationError
 
 """here create global variables for coinbase module"""
 lst_of_available_currencies = []
-lst_of_currencies_and_price = []
 lst_name_of_cryptocurrencies_to_live_price = ["BTC"]
 lst_name_cryptocurrencies_breakpoint = []
 
-dct_of_alert_name_percentage = {}
-dct_of_currencies_and_price_current = {}
 dct_of_currencies_and_price_main = {}
 
 sell_price = 1.1  # btc breakpoint
@@ -32,6 +29,26 @@ time_update_stop = False  # Variable that tells the program whether price update
 count_coinbase_main_1 = 0
 # The variable informs the program whether the value has been downloaded from the API once. If so, the program
 # starts the rest of the threads.
+
+
+"""
+Here are all the working functions used by the entire program installation down to one section in the code
+"""
+
+
+def percentage_calculator(current_price, start_price):
+    current_price = float(current_price)
+    start_price = float(start_price)
+    percentage = ((current_price - start_price) / start_price) * 100
+    percentage = round(percentage, 2)
+    return percentage
+
+
+def convert(lst):
+    # convert list to dictionary
+    res_dct = {lst[i]: lst[i + 1] for i in range(0, len(lst), 2)}
+    return res_dct
+
 
 """
 This is place for coinbase part. This is where the availability of cryptocurrencies and their current prices 
@@ -190,14 +207,6 @@ def live_price_of_cryptocurrencies():
             time.sleep(1)
 
 
-def percentage_calculator(current_price, start_price):
-    current_price = float(current_price)
-    start_price = float(start_price)
-    percentage = ((current_price - start_price) / start_price) * 100
-    percentage = round(percentage, 2)
-    return percentage
-
-
 def price_alert_monitor():
     global sell_price, buy_price
     a = True
@@ -245,82 +254,78 @@ a cryptocurrency goes up strongly.
 """
 
 
-def main_alert_price_all_crypto():
-    global lst_of_available_currencies, lst_of_currencies_and_price, dct_of_currencies_and_price_current
-    # get_all_available_crypto()  # only once is needed
+class BigDifferencesInPrices:
+    def __init__(self):
+        self.dct_of_currencies_and_price_current = {}
+        self.dct_of_alert_name_percentage = {}
 
-    dct_of_currencies_and_price_start = check_all_price()
-    start_time = time.time()
-    while True:
-        current_time = time.time()
-        current_time -= start_time
-        if current_time >= 86400:
-            start_time = time.time()
-            dct_of_currencies_and_price_start = check_all_price()
+    def main_alert_price_all_crypto(self):
+        # get_all_available_crypto()  # only once is needed
 
-        dct_of_currencies_and_price_current.clear()
-        dct_of_currencies_and_price_current = check_all_price()
+        dct_of_currencies_and_price_start = self.check_all_price()
+        start_time = time.time()
+        while True:
+            current_time = time.time()
+            current_time -= start_time
+            if current_time >= 86400:
+                start_time = time.time()
+                dct_of_currencies_and_price_start.clear()
+                dct_of_currencies_and_price_start = self.check_all_price()
 
-        a1 = list(dct_of_currencies_and_price_start.values())  # list of values from dct
-        b1 = list(dct_of_currencies_and_price_current.values())  # list of values from dct
+            self.dct_of_currencies_and_price_current.clear()
+            self.dct_of_currencies_and_price_current = self.check_all_price()
 
-        for i in range(len(a1)):
+            a1 = list(dct_of_currencies_and_price_start.values())  # list of values from dct
+            b1 = list(self.dct_of_currencies_and_price_current.values())  # list of values from dct
 
-            percentage = percentage_calculator(b1[i], a1[i])
-            if percentage >= 5:
-                check_percentage(percentage, b1, i)
-            elif percentage <= -5:
-                check_percentage(percentage, b1, i)
+            # print(a1)
+            # print(b1)
 
-        sleep(1)
+            for i in range(len(a1)):
+                percentage = percentage_calculator(b1[i], a1[i])
+                if percentage >= 5:
+                    self.check_percentage(percentage, b1, i)
+                elif percentage <= -5:
+                    self.check_percentage(percentage, b1, i)
 
+            sleep(1)
 
-def check_all_price():
-    global lst_of_available_currencies, lst_of_currencies_and_price
-    lst_of_currencies_and_price.clear()
-    for i in lst_of_available_currencies:
-        try:
-            a = get_price_of_currency_from_coinbase(i)
-            lst_of_currencies_and_price.extend(a.split(" "))
-        except AttributeError:
-            pass
+    def check_all_price(self):
+        global lst_of_available_currencies, dct_of_currencies_and_price_main
 
-    dct_of_currencies_and_price = convert(lst_of_currencies_and_price)
-    return dct_of_currencies_and_price
+        dct_of_currencies_and_price = {}
 
+        for key, value in dct_of_currencies_and_price_main.items():
+            dct_local = {key: value[-1]}
+            dct_of_currencies_and_price.update(dct_local)
 
-def convert(lst):
-    # convert list to dictionary
-    res_dct = {lst[i]: lst[i + 1] for i in range(0, len(lst), 2)}
-    return res_dct
+        return dct_of_currencies_and_price
 
+    def check_percentage(self, percentage, b1, i):
+        name_crypto = ""
+        d1 = {}
+        lst = []
 
-def check_percentage(percentage, b1, i):
-    global dct_of_currencies_and_price_current, dct_of_alert_name_percentage
-    name_crypto = ""
-    d1 = {}
-    lst = []
+        for key, value in self.dct_of_alert_name_percentage.items():
+            if len(value) > 1:
+                self.dct_of_alert_name_percentage[key].pop(0)
 
-    for key, value in dct_of_alert_name_percentage.items():
-        if len(value) > 2:
-            dct_of_alert_name_percentage[key].pop(0)
+        price = round(float(b1[i]), 2)
+        for key1, value1 in self.dct_of_currencies_and_price_current.items():
+            if b1[i] == value1:
+                name_crypto = key1
 
-    price = round(float(b1[i]), 2)
-    for key1, value1 in dct_of_currencies_and_price_current.items():
-        if b1[i] == value1:
-            name_crypto = key1
-
-    if name_crypto not in dct_of_alert_name_percentage:
-        lst.append(int(percentage))
-        d1[name_crypto] = lst
-        dct_of_alert_name_percentage.update(d1)
-        bot.send_message(chat_id=1181399908,
-                         text=f"Alert price {name_crypto} {percentage}% | {price}")
-    elif name_crypto in dct_of_alert_name_percentage:
-        if int(percentage) not in dct_of_alert_name_percentage[name_crypto]:
-            dct_of_alert_name_percentage[name_crypto].append(int(percentage))
+        if name_crypto not in self.dct_of_alert_name_percentage:
+            lst.append(int(percentage))
+            d1[name_crypto] = lst
+            self.dct_of_alert_name_percentage.update(d1)
             bot.send_message(chat_id=1181399908,
                              text=f"Alert price {name_crypto} {percentage}% | {price}")
+        elif name_crypto in self.dct_of_alert_name_percentage:
+            if int(percentage) not in self.dct_of_alert_name_percentage[name_crypto]:
+                self.dct_of_alert_name_percentage[name_crypto].append(int(percentage))
+                bot.send_message(chat_id=1181399908,
+                                 text=f"Alert price {name_crypto} {percentage}% | {price}")
 
 
 """
