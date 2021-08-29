@@ -8,7 +8,7 @@ thread2 = Thread(target=telegram_main)  # telegram bot and sending message (all 
 thread3 = Thread(target=live_price_of_cryptocurrencies)  # get live price of BTC and send message via telegram
 thread4 = Thread(target=price_alert_monitor)  # get alert price if BTC break set price via telegram
 # thread5 = Thread(target=main_alert_price_all_crypto)  # get alert price of all crypto if price if fast change
-thread6 = Thread(target=Coinbase().main_coinbase_api)  # coinbase convert, buy and sell
+# thread6 = Thread(target=Coinbase().main_coinbase_api)  # coinbase convert, buy and sell
 
 
 thread1.setDaemon(True)
@@ -30,8 +30,8 @@ try:
             # thread5.setDaemon(True)
             # thread5.start()
 
-            thread6.setDaemon(True)
-            thread6.start()
+            # thread6.setDaemon(True)
+            # thread6.start()
             break
 except KeyboardInterrupt:
     pass
