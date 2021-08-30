@@ -125,7 +125,6 @@ def coinbase_get_price():
                 d_let1[key] = lst_let1
                 dct_of_currencies_and_price_main.update(d_let1)
 
-        # print(dct_of_currencies_and_price_main)
         count_coinbase_main_1 = 1
         sleep(60)
 
