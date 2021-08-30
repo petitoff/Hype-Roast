@@ -22,7 +22,7 @@ thread2.start()
 
 try:
     while True:
-        time.sleep(10)
+        time.sleep(1)
         if core.count_coinbase_main_1 == 1:
             thread3.setDaemon(True)
             thread3.start()

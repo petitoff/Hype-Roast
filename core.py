@@ -21,8 +21,6 @@ dct_of_currencies_and_price_main = {}
 dct_name_value_breakpoint = {}  # A dictionary that keeps the names and values of cryptocurrencies with levels
 # when an alert is to be triggered.
 
-sell_price = 1.1  # btc breakpoint
-buy_price = 1.1  # btc breakpoint
 time_update = 600  # Every how many seconds a price update is to be sent. This is the default value and can be
 # changed by the user.
 
@@ -210,34 +208,42 @@ def live_price_of_cryptocurrencies():
 
 
 def price_alert_monitor():
-    global sell_price, buy_price, dct_name_value_breakpoint
+    global dct_name_value_breakpoint
     a = True
+    sell_price = float
+    buy_price = float
     sell_price_before = 0
     buy_price_before = 0
-    current_price = float
-    current_price_print = str
+    # current_price = float
+    # current_price_print = str
     while True:
         for key in dct_name_value_breakpoint.keys():
             current_price = get_currently_price_of_currency(key)
             current_price_print = key + " is " + str(current_price) + " USD"
 
-        if sell_price != 1.1 and buy_price != 1.1:
-            if a is True:
-                a = price_lvl_alert(current_price, current_price_print, sell_price, buy_price)
-                if a == 1:
-                    sell_price_before = sell_price
-                elif a == 2:
-                    buy_price_before = buy_price
-        if a == 1:
-            if sell_price_before != sell_price:
-                a = True
-                sell_price_before = 0
-        elif a == 2:
-            if buy_price_before != buy_price:
-                a = True
-                buy_price_before = 0
+            try:
+                sell_price = dct_name_value_breakpoint[key]["up"]
+                buy_price = dct_name_value_breakpoint[key]["down"]
+            except KeyError:
+                pass
 
-        sleep(30)
+            if type(sell_price) is not type and type(buy_price) is not type:
+                if a is True:
+                    a = price_lvl_alert(current_price, current_price_print, sell_price, buy_price)
+                    if a == 1:
+                        sell_price_before = sell_price
+                    elif a == 2:
+                        buy_price_before = buy_price
+            if a == 1:
+                if sell_price_before != sell_price:
+                    a = True
+                    sell_price_before = 0
+            elif a == 2:
+                if buy_price_before != buy_price:
+                    a = True
+                    buy_price_before = 0
+
+        sleep(1)
 
 
 def price_on_request(name):
@@ -359,7 +365,7 @@ def change_settings(update, context):
         update.message.reply_text("You don't have permission.")
         return
 
-    global sell_price, buy_price, time_update, time_update_stop, \
+    global time_update, time_update_stop, count_coinbase_main_1, \
         lst_name_of_cryptocurrencies_to_live_price, lst_of_available_currencies, dct_name_value_breakpoint
 
     text = str(update.message.text).lower()
@@ -367,6 +373,10 @@ def change_settings(update, context):
         update.message.reply_text("You can use:")
         update.message.reply_text("up => e.g. => [up4000] | This is for the upper limit of the price.")
     elif text[:2] == "up":
+        if count_coinbase_main_1 == 0:
+            update.message.reply_text("Wait for the program to fully start and try again.")
+            return
+
         try:
             lst_local_setting = [i for i, ltr in enumerate(text) if ltr == " "]
             name_crypto = text[3:lst_local_setting[1]].upper()
@@ -388,9 +398,13 @@ def change_settings(update, context):
             update.message.reply_text(
                 "Error! Please enter the correct form. If you do not know how, please enter help.")
     elif text[:4] == "down":
+        if count_coinbase_main_1 == 0:
+            update.message.reply_text("Wait for the program to fully start and try again.")
+            return
+
         try:
             lst_local_setting = [i for i, ltr in enumerate(text) if ltr == " "]
-            name_crypto = text[4:lst_local_setting[1]].upper()
+            name_crypto = text[5:lst_local_setting[1]].upper()
             buy_price = float(text[lst_local_setting[1] + 1:])
 
             if name_crypto not in dct_name_value_breakpoint:
