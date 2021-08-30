@@ -12,7 +12,7 @@ from telegram.ext import *
 from coinbase.wallet.client import Client
 from coinbase.wallet.error import AuthenticationError
 
-"""here create global variables for coinbase module"""
+"""Global variables, lists and dictionaries are placed here."""
 lst_of_available_currencies = []
 lst_name_of_cryptocurrencies_to_live_price = ["BTC"]
 lst_name_cryptocurrencies_breakpoint = []
@@ -135,7 +135,7 @@ coinbase convert, buy and sell.
 """
 
 
-class Coinbase:
+class CoinbaseTransactions:
     def coinbase_import_api(self):
         with open("key.json", 'r') as f:
             api_keys = json.loads(f.read())
