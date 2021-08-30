@@ -263,8 +263,6 @@ class BigDifferencesInPrices:
         self.dct_of_alert_name_percentage = {}
 
     def main_alert_price_all_crypto(self):
-        # get_all_available_crypto()  # only once is needed
-
         dct_of_currencies_and_price_start = self.check_all_price()
         start_time = time.time()
         while True:
@@ -387,19 +385,13 @@ def change_settings(update, context):
             name_crypto = text[3:lst_local_setting[1]].upper()
             sell_price = float(text[lst_local_setting[1] + 1:])
 
+            update.message.reply_text(f"Price up set to: {sell_price}")
+
             if name_crypto not in dct_name_value_breakpoint:
                 dct_name_value_breakpoint.update({name_crypto: {"up": [sell_price, False]}})
             else:
                 dct_name_value_breakpoint[name_crypto].update({"up": [sell_price, False]})
 
-            update.message.reply_text(f"Price up set to: {sell_price}")
-            # if text[2:] == "":
-            #     update.message.reply_text("Enter a value")
-            # elif float(text[2:]) > buy_price:
-            #     sell_price = float(text[2:])
-            #     update.message.reply_text(f"Price up set to: {sell_price}")
-            # else:
-            #     update.message.reply_text("Sell price can't be lower than buy price")
         except ValueError:
             update.message.reply_text(
                 "Error! Please enter the correct form. If you do not know how, please enter help.")
@@ -413,21 +405,12 @@ def change_settings(update, context):
             name_crypto = text[5:lst_local_setting[1]].upper()
             buy_price = float(text[lst_local_setting[1] + 1:])
 
+            update.message.reply_text(f"Price down set to: {buy_price}")
+
             if name_crypto not in dct_name_value_breakpoint:
                 dct_name_value_breakpoint.update({name_crypto: {"down": [buy_price, False]}})
             else:
                 dct_name_value_breakpoint[name_crypto].update({"down": [buy_price, False]})
-
-            update.message.reply_text(f"Price down set to: {buy_price}")
-            # if text[4:] == "":
-            #     update.message.reply_text("Enter a value")
-            # elif sell_price == 1.1:
-            #     update.message.reply_text("First, establish the upper limit")
-            # elif float(text[4:]) < sell_price:
-            #     buy_price = float(text[4:])
-            #     update.message.reply_text(f"Price down set to: {buy_price}")
-            # else:
-            #     update.message.reply_text("Buy price can't be bigger than sell price")
         except ValueError:
             update.message.reply_text("Error! Enter a value")
     elif text[:4] == "time":
