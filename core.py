@@ -212,37 +212,29 @@ def price_alert_monitor():
     a = True
     sell_price = float
     buy_price = float
-    sell_price_before = 0
-    buy_price_before = 0
-    # current_price = float
-    # current_price_print = str
     while True:
         for key in dct_name_value_breakpoint.keys():
             current_price = get_currently_price_of_currency(key)
             current_price_print = key + " is " + str(current_price) + " USD"
 
             try:
-                sell_price = dct_name_value_breakpoint[key]["up"]
-                buy_price = dct_name_value_breakpoint[key]["down"]
+                sell_price = dct_name_value_breakpoint[key]["up"][0]
+                buy_price = dct_name_value_breakpoint[key]["down"][0]
             except KeyError:
                 pass
 
-            if type(sell_price) is not type and type(buy_price) is not type:
-                if a is True:
-                    a = price_lvl_alert(current_price, current_price_print, sell_price, buy_price)
-                    if a == 1:
-                        sell_price_before = sell_price
-                    elif a == 2:
-                        buy_price_before = buy_price
-            if a == 1:
-                if sell_price_before != sell_price:
-                    a = True
-                    sell_price_before = 0
-            elif a == 2:
-                if buy_price_before != buy_price:
-                    a = True
-                    buy_price_before = 0
-
+            try:
+                if type(sell_price) is not type and type(buy_price) is not type:
+                    if float(current_price) >= sell_price and dct_name_value_breakpoint[key]["up"][1] is False:
+                        alert_price(f"Alert price for sell! The price has hit the high end. | {current_price_print}")
+                        alert_price(f"Update brake point of price.")
+                        dct_name_value_breakpoint[key]["up"][1] = True
+                    elif float(current_price) <= buy_price and dct_name_value_breakpoint[key]["down"][1] is False:
+                        alert_price(f"Alert price for sell! The price has hit the high end. | {current_price_print}")
+                        alert_price(f"Update brake point of price.")
+                        dct_name_value_breakpoint[key]["down"][1] = True
+            except KeyError:
+                pass
         sleep(1)
 
 
@@ -396,10 +388,11 @@ def change_settings(update, context):
             sell_price = float(text[lst_local_setting[1] + 1:])
 
             if name_crypto not in dct_name_value_breakpoint:
-                dct_name_value_breakpoint.update({name_crypto: {"up": sell_price}})
+                dct_name_value_breakpoint.update({name_crypto: {"up": [sell_price, False]}})
             else:
-                dct_name_value_breakpoint[name_crypto].update({"up": sell_price})
+                dct_name_value_breakpoint[name_crypto].update({"up": [sell_price, False]})
 
+            update.message.reply_text(f"Price up set to: {sell_price}")
             # if text[2:] == "":
             #     update.message.reply_text("Enter a value")
             # elif float(text[2:]) > buy_price:
@@ -421,10 +414,11 @@ def change_settings(update, context):
             buy_price = float(text[lst_local_setting[1] + 1:])
 
             if name_crypto not in dct_name_value_breakpoint:
-                dct_name_value_breakpoint.update({name_crypto: {"down": buy_price}})
+                dct_name_value_breakpoint.update({name_crypto: {"down": [buy_price, False]}})
             else:
-                dct_name_value_breakpoint[name_crypto].update({"down": buy_price})
+                dct_name_value_breakpoint[name_crypto].update({"down": [buy_price, False]})
 
+            update.message.reply_text(f"Price down set to: {buy_price}")
             # if text[4:] == "":
             #     update.message.reply_text("Enter a value")
             # elif sell_price == 1.1:
