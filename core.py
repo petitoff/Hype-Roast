@@ -13,9 +13,9 @@ from coinbase.wallet.client import Client
 from coinbase.wallet.error import AuthenticationError
 
 """Global variables, lists and dictionaries are placed here."""
-lst_of_available_currencies = []
+lst_of_available_currencies = []  # List of all cryptocurrencies available on coinbase.
 lst_name_of_cryptocurrencies_to_live_price = ["BTC"]
-lst_name_cryptocurrencies_breakpoint = []
+# List of cryptocurrency names to be sent in the live price definition.
 
 dct_of_currencies_and_price_main = {}  # A dictionary that holds cryptocurrency prices downloaded from api.
 # The entire program refers to it if it wants to know the price of a cryptocurrency.
