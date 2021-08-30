@@ -345,7 +345,7 @@ def start_command(update, context):
 
 
 def help_command(update, context):
-    update.message.reply_text("This is not working.")
+    update.message.reply_text("If you want help, type help.")
 
 
 def handle_message(update, context):
@@ -371,7 +371,20 @@ def change_settings(update, context):
     text = str(update.message.text).lower()
     if text[:4] == "help":
         update.message.reply_text("You can use:")
-        update.message.reply_text("up => e.g. => [up4000] | This is for the upper limit of the price.")
+        update.message.reply_text("up 'name_crypto price => e.g. => [up btc 40000] | "
+                                  "This is for the upper limit of the price.")
+        update.message.reply_text("down 'name_crypto' 'price' => e.g. => [down btc 35000] | "
+                                  "This is for the downer limit of the price.")
+        update.message.reply_text("time'minutes' => e.g. => [time10] | "
+                                  "Every how many minutes notifications about the price of cryptocurrencies are "
+                                  "to be sent.")
+        update.message.reply_text("add'name_crypto' => e.g. => [addbtc] | Adding any cryptocurrency to the live price.")
+        update.message.reply_text("remove'name_crypto' => e.g. => [removebtc] | "
+                                  "Remove any cryptocurrency in the live price.")
+        update.message.reply_text("tstart | Running Live Price (enabled by default).")
+        update.message.reply_text("tstop | Live price exclusion.")
+        update.message.reply_text("price'name_crypto' => e.g. => [pricebtc] | "
+                                  "Knowing the price of any cryptocurrency.")
     elif text[:2] == "up":
         if count_coinbase_main_1 == 0:
             update.message.reply_text("Wait for the program to fully start and try again.")
