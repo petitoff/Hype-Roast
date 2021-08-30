@@ -17,7 +17,8 @@ lst_of_available_currencies = []
 lst_name_of_cryptocurrencies_to_live_price = ["BTC"]
 lst_name_cryptocurrencies_breakpoint = []
 
-dct_of_currencies_and_price_main = {}
+dct_of_currencies_and_price_main = {}  # A dictionary that holds cryptocurrency prices downloaded from api.
+# The entire program refers to it if it wants to know the price of a cryptocurrency.
 dct_name_value_breakpoint = {}  # A dictionary that keeps the names and values of cryptocurrencies with levels
 # when an alert is to be triggered.
 
