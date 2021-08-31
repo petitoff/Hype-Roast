@@ -11,8 +11,6 @@ thread5 = Thread(
     target=BigDifferencesInPrices().main_alert_price_all_crypto)  # get alert price of all crypto if price if fast
 # change
 
-# thread6 = Thread(target=Coinbase().main_coinbase_api)  # coinbase convert, buy and sell
-
 
 thread1.setDaemon(True)
 thread1.start()
@@ -32,9 +30,6 @@ try:
 
             thread5.setDaemon(True)
             thread5.start()
-
-            # thread6.setDaemon(True)
-            # thread6.start()
             break
 except KeyboardInterrupt:
     pass
