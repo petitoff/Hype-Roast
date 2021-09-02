@@ -210,12 +210,14 @@ def live_price_of_cryptocurrencies():
 def price_alert_monitor():
     global dct_name_value_breakpoint
     a = True
-    sell_price = float
-    buy_price = float
+
     while True:
         for key in dct_name_value_breakpoint.keys():
             current_price = get_currently_price_of_currency(key)
             current_price_print = key + " is " + str(current_price) + " USD"
+
+            sell_price = float
+            buy_price = float
 
             try:
                 sell_price = dct_name_value_breakpoint[key]["up"][0]
@@ -224,12 +226,13 @@ def price_alert_monitor():
                 pass
 
             try:
-                if type(sell_price) is not type and type(buy_price) is not type:
+                if type(sell_price) is not type:
                     if float(current_price) >= sell_price and dct_name_value_breakpoint[key]["up"][1] is False:
                         alert_price(f"Alert price for sell! The price has hit the high end. | {current_price_print}")
                         alert_price(f"Update brake point of price.")
                         dct_name_value_breakpoint[key]["up"][1] = True
-                    elif float(current_price) <= buy_price and dct_name_value_breakpoint[key]["down"][1] is False:
+                if type(buy_price) is not type:
+                    if float(current_price) <= buy_price and dct_name_value_breakpoint[key]["down"][1] is False:
                         alert_price(f"Alert price for sell! The price has hit the high end. | {current_price_print}")
                         alert_price(f"Update brake point of price.")
                         dct_name_value_breakpoint[key]["down"][1] = True
@@ -322,10 +325,7 @@ This is place for telegram bot. Put here api key and other custom stuff.
 
 # here create global variables for telegram module
 
-
 bot = Bot("1947691149:AAF9ZqpE_s43XEflZE5HCAQeNn1_4JrNMJU")  # main
-
-
 # bot = Bot("1968009671:AAFyFLX4efJbsjnRlKeXfSRvXYwJo60Udic")  # dev
 
 
@@ -450,8 +450,10 @@ def alert_price(message_alert):
 
 
 def telegram_main():
+
     updater = Updater("1947691149:AAF9ZqpE_s43XEflZE5HCAQeNn1_4JrNMJU", use_context=True)  # main
     # updater = Updater("1968009671:AAFyFLX4efJbsjnRlKeXfSRvXYwJo60Udic", use_context=True)  # for dev and test
+    
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler("start", start_command))
