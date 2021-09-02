@@ -325,8 +325,8 @@ This is place for telegram bot. Put here api key and other custom stuff.
 
 # here create global variables for telegram module
 
-bot = Bot("1947691149:AAF9ZqpE_s43XEflZE5HCAQeNn1_4JrNMJU")  # main
-# bot = Bot("1968009671:AAFyFLX4efJbsjnRlKeXfSRvXYwJo60Udic")  # dev
+# bot = Bot("1947691149:AAF9ZqpE_s43XEflZE5HCAQeNn1_4JrNMJU")  # main
+bot = Bot("1968009671:AAFyFLX4efJbsjnRlKeXfSRvXYwJo60Udic")  # dev
 
 
 def start_command(update, context):
@@ -450,10 +450,9 @@ def alert_price(message_alert):
 
 
 def telegram_main():
+    # updater = Updater("1947691149:AAF9ZqpE_s43XEflZE5HCAQeNn1_4JrNMJU", use_context=True)  # main
+    updater = Updater("1968009671:AAFyFLX4efJbsjnRlKeXfSRvXYwJo60Udic", use_context=True)  # for dev and test
 
-    updater = Updater("1947691149:AAF9ZqpE_s43XEflZE5HCAQeNn1_4JrNMJU", use_context=True)  # main
-    # updater = Updater("1968009671:AAFyFLX4efJbsjnRlKeXfSRvXYwJo60Udic", use_context=True)  # for dev and test
-    
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler("start", start_command))
