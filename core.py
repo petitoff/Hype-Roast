@@ -438,7 +438,7 @@ def change_settings(update, context):
                                       "Please try again in a minute!")
     elif text[:6] == "remove":
         try:
-            name_crypto = text[:6].upper()
+            name_crypto = text[6:].upper()
             lst_name_of_cryptocurrencies_to_live_price.remove(name_crypto)
             update.message.reply_text(f"{name_crypto} has been remove from live price.")
         except ValueError:
