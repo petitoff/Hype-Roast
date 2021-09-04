@@ -325,8 +325,8 @@ This is place for telegram bot. Put here api key and other custom stuff.
 
 # here create global variables for telegram module
 
-bot = Bot("1947691149:AAF9ZqpE_s43XEflZE5HCAQeNn1_4JrNMJU")  # main
-# bot = Bot("1968009671:AAFyFLX4efJbsjnRlKeXfSRvXYwJo60Udic")  # dev
+# bot = Bot("1947691149:AAF9ZqpE_s43XEflZE5HCAQeNn1_4JrNMJU")  # main
+bot = Bot("1968009671:AAFyFLX4efJbsjnRlKeXfSRvXYwJo60Udic")  # dev
 
 
 def start_command(update, context):
@@ -387,7 +387,7 @@ def change_settings(update, context):
             name_crypto = text[3:lst_local_setting[1]].upper()
             sell_price = float(text[lst_local_setting[1] + 1:])
 
-            update.message.reply_text(f"Price up set to: {sell_price}")
+            update.message.reply_text(f"The upper {name_crypto} price up set to: {sell_price}")
 
             if name_crypto not in dct_name_value_breakpoint:
                 dct_name_value_breakpoint.update({name_crypto: {"up": [sell_price, False]}})
@@ -407,7 +407,7 @@ def change_settings(update, context):
             name_crypto = text[5:lst_local_setting[1]].upper()
             buy_price = float(text[lst_local_setting[1] + 1:])
 
-            update.message.reply_text(f"Price down set to: {buy_price}")
+            update.message.reply_text(f"The lower {name_crypto} price has been set to: {buy_price}")
 
             if name_crypto not in dct_name_value_breakpoint:
                 dct_name_value_breakpoint.update({name_crypto: {"down": [buy_price, False]}})
@@ -429,16 +429,18 @@ def change_settings(update, context):
         time_update_stop = True
         update.message.reply_text("Send message with live price of crypto is stop.")
     elif text[:3] == "add":
-        if text[3:] in lst_of_available_currencies:
-            lst_name_of_cryptocurrencies_to_live_price.append(text[3:])
-            update.message.reply_text(f"{text[3:]} has been added to the live price.")
+        name_crypto = text[3:].upper()
+        if name_crypto in lst_of_available_currencies:
+            lst_name_of_cryptocurrencies_to_live_price.append(name_crypto)
+            update.message.reply_text(f"{name_crypto} has been added to the live price.")
         else:
             update.message.reply_text("The given cryptocurrency does not exist or has not been loaded yet. "
                                       "Please try again in a minute!")
     elif text[:6] == "remove":
         try:
-            lst_name_of_cryptocurrencies_to_live_price.remove(text[6:])
-            update.message.reply_text(f"{text[6:]} has been remove from live price.")
+            name_crypto = text[:6].upper()
+            lst_name_of_cryptocurrencies_to_live_price.remove(name_crypto)
+            update.message.reply_text(f"{name_crypto} has been remove from live price.")
         except ValueError:
             update.message.reply_text("The cryptocurrency with the given name is not on the list.")
     elif text[:5] == "price":
@@ -450,10 +452,9 @@ def alert_price(message_alert):
 
 
 def telegram_main():
+    # updater = Updater("1947691149:AAF9ZqpE_s43XEflZE5HCAQeNn1_4JrNMJU", use_context=True)  # main
+    updater = Updater("1968009671:AAFyFLX4efJbsjnRlKeXfSRvXYwJo60Udic", use_context=True)  # for dev and test
 
-    updater = Updater("1947691149:AAF9ZqpE_s43XEflZE5HCAQeNn1_4JrNMJU", use_context=True)  # main
-    # updater = Updater("1968009671:AAFyFLX4efJbsjnRlKeXfSRvXYwJo60Udic", use_context=True)  # for dev and test
-    
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler("start", start_command))
