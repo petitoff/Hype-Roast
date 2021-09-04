@@ -429,16 +429,18 @@ def change_settings(update, context):
         time_update_stop = True
         update.message.reply_text("Send message with live price of crypto is stop.")
     elif text[:3] == "add":
-        if text[3:] in lst_of_available_currencies:
-            lst_name_of_cryptocurrencies_to_live_price.append(text[3:])
-            update.message.reply_text(f"{text[3:]} has been added to the live price.")
+        name_crypto = text[3:].upper()
+        if name_crypto in lst_of_available_currencies:
+            lst_name_of_cryptocurrencies_to_live_price.append(name_crypto)
+            update.message.reply_text(f"{name_crypto} has been added to the live price.")
         else:
             update.message.reply_text("The given cryptocurrency does not exist or has not been loaded yet. "
                                       "Please try again in a minute!")
     elif text[:6] == "remove":
         try:
-            lst_name_of_cryptocurrencies_to_live_price.remove(text[6:])
-            update.message.reply_text(f"{text[6:]} has been remove from live price.")
+            name_crypto = text[:6].upper()
+            lst_name_of_cryptocurrencies_to_live_price.remove(name_crypto)
+            update.message.reply_text(f"{name_crypto} has been remove from live price.")
         except ValueError:
             update.message.reply_text("The cryptocurrency with the given name is not on the list.")
     elif text[:5] == "price":
