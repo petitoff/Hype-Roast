@@ -387,7 +387,7 @@ def change_settings(update, context):
             name_crypto = text[3:lst_local_setting[1]].upper()
             sell_price = float(text[lst_local_setting[1] + 1:])
 
-            update.message.reply_text(f"Price up set to: {sell_price}")
+            update.message.reply_text(f"The upper {name_crypto} price up set to: {sell_price}")
 
             if name_crypto not in dct_name_value_breakpoint:
                 dct_name_value_breakpoint.update({name_crypto: {"up": [sell_price, False]}})
@@ -407,7 +407,7 @@ def change_settings(update, context):
             name_crypto = text[5:lst_local_setting[1]].upper()
             buy_price = float(text[lst_local_setting[1] + 1:])
 
-            update.message.reply_text(f"Price down set to: {buy_price}")
+            update.message.reply_text(f"The lower {name_crypto} price has been set to: {buy_price}")
 
             if name_crypto not in dct_name_value_breakpoint:
                 dct_name_value_breakpoint.update({name_crypto: {"down": [buy_price, False]}})
