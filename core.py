@@ -339,6 +339,18 @@ class BigDifferencesInPrices:
                 bot.send_message(chat_id=1181399908,
                                  text=f"Alert price {name_crypto} {percentage}% | {price}")
 
+    def checking_recent_alerts(self, name, how_much):
+        try:
+            lst_price = self.dct_of_alert_name_percentage[name]
+        except KeyError:
+            return "The name you entered is not listed."
+        lst_price_len = len(lst_price)
+        if lst_price_len >= how_much:
+            print_lst_price = lst_price[lst_price_len-how_much:]
+            return print_lst_price
+        else:
+            return "The value you entered exceeds the size of the list. Provide less value!"
+
 
 """
 This is place for telegram bot. Put here api key and other custom stuff.
@@ -496,6 +508,14 @@ def change_settings(update, context):
         else:
             update.message.reply_text(
                 f"There is no such cryptocurrency as \"{text[5:]}\"")
+    elif text[:4] == "last":
+        lst_local_setting = [i for i, ltr in enumerate(text) if ltr == " "]
+        name_crypto = text[5:lst_local_setting[1]].upper()
+        how_much = int(text[lst_local_setting[1] + 1:])
+
+        send_message = BigDifferencesInPrices().checking_recent_alerts(
+            name_crypto, how_much)
+        update.message.reply_text(send_message)
 
 
 def alert_price(message_alert):
