@@ -343,13 +343,15 @@ This is place for telegram bot. Put here api key and other custom stuff.
 
 with open("key.json", 'r') as f:
     api_keys = json.loads(f.read())
+    telegram_setttings_api_main = api_keys["telegram2"]["main"]
+
     telegram_api_main = api_keys["telegram"]["main"]
     telegram_api_dev = api_keys["telegram"]["dev"]
 
-    telegram_api_main2 = api_keys["telegram2"]["main"]
-
 # bot = Bot("telegram_api_main")  # main
-bot = Bot(telegram_api_dev)  # dev
+# bot = Bot(telegram_api_dev)  # dev
+
+bot_settings = Bot(telegram_setttings_api_main)
 
 
 def start_command(update, context):
@@ -487,12 +489,14 @@ def change_settings(update, context):
 
 
 def alert_price(message_alert):
-    bot.send_message(chat_id=1181399908, text=message_alert)
+    bot_settings.send_message(chat_id=1181399908, text=message_alert)
 
 
 def telegram_main():
     # updater = Updater(telegram_api_main, use_context=True)  # main
-    updater = Updater(telegram_api_dev, use_context=True)  # for dev and test
+    # updater = Updater(telegram_api_dev, use_context=True)  # for dev and test
+
+    updater = Updater(telegram_setttings_api_main)
 
     dp = updater.dispatcher
 
@@ -522,4 +526,5 @@ def price_lvl_alert(price, price_print, up_lvl, down_lvl):
 
 """A place for a Telegram bot that sends notifications of price increases and other frequent notifications."""
 
-bot2 = Bot()
+# bot = Bot("telegram_api_main")  # main
+bot = Bot(telegram_api_dev)  # dev
