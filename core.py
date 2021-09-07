@@ -10,7 +10,7 @@ from telegram import *
 from telegram.ext import *
 
 from coinbase.wallet.client import Client
-from coinbase.wallet.error import AuthenticationError
+from coinbase.wallet.error import AuthenticationError, ExpiredTokenError
 
 """Global variables, lists and dictionaries are placed here."""
 lst_of_available_currencies = []  # List of all cryptocurrencies available on coinbase.
@@ -56,7 +56,7 @@ def convert(lst):
 
 
 """
-This is place for coinbase part. This is where the availability of cryptocurrencies and their current prices 
+This is place for coinbase part. This is where the availability of cryptocurrencies and their current prices
 are checked.
 """
 
@@ -252,16 +252,20 @@ def price_alert_monitor():
 
 
 def price_on_request(name):
-    # This function If the user sends a message "Price [Name]" returns the value (price) cryptos.
+    # This function If the user sends a message "price[name]" returns the value (price) cryptos.
     try:
-        price = get_currently_price_of_currency(name)
-        if type(price) is int or type(price) is float:
-            current_price_print = name.upper() + " is " + str(price) + " USD"
-            return current_price_print
-        else:
-            return price
-    except AttributeError:
-        return "You must enter a valid cryptocurrency name"
+        url = f"https://api.coinbase.com/v2/prices/{name}-USD/spot"
+        req = urllib.request.Request(url)
+        response = urllib.request.urlopen(req)
+        data = response.read()
+        values = json.loads(data)
+        price = values["data"]["base"]
+        price += " " + values["data"]["amount"]
+
+        current_price_print = name.upper() + " is " + str(price) + " USD"
+        return current_price_print
+    except urllib.error.HTTPError:
+        return "error"
 
 
 """
@@ -485,7 +489,12 @@ def change_settings(update, context):
             update.message.reply_text(
                 "The cryptocurrency with the given name is not on the list.")
     elif text[:5] == "price":
-        update.message.reply_text(price_on_request(text[5:]))
+        a = price_on_request(text[5:])
+        if a != "error":
+            update.message.reply_text(a)
+        else:
+            update.message.reply_text(
+                f"There is no such cryptocurrency as \"{text[5:]}\"")
 
 
 def alert_price(message_alert):
