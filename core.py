@@ -260,8 +260,7 @@ def price_on_request(name):
         response = urllib.request.urlopen(req)
         data = response.read()
         values = json.loads(data)
-        price = values["data"]["base"]
-        price += " " + values["data"]["amount"]
+        price = values["data"]["amount"]
 
         current_price_print = name.upper() + " is " + str(price) + " USD"
         return current_price_print
