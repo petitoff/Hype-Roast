@@ -243,7 +243,7 @@ def price_alert_monitor():
                 if type(buy_price) is not type:
                     if float(current_price) <= buy_price and dct_name_value_breakpoint[key]["down"][1] is False:
                         alert_price(
-                            f"Alert price for sell! The price has hit the high end. | {current_price_print}")
+                            f"Alert price for buy! The price has hit the low end. | {current_price_print}")
                         alert_price(f"Update brake point of price.")
                         dct_name_value_breakpoint[key]["down"][1] = True
             except KeyError:
@@ -516,21 +516,6 @@ def telegram_main():
     dp.add_handler(MessageHandler(Filters.text, change_settings))
 
     updater.start_polling(1)
-
-
-def price_lvl_alert(price, price_print, up_lvl, down_lvl):
-    if float(price) >= up_lvl:
-        alert_price(
-            f"Alert price for sell! The price has hit the high end. | {price_print}")
-        alert_price(f"Update brake point of price.")
-        return 1
-    elif float(price) <= down_lvl:
-        alert_price(
-            f"Alert price for buy! The price has hit the low end. | {price_print}")
-        alert_price(f"Update brake point of price.")
-        return 2
-    else:
-        return True
 
 
 """A place for a Telegram bot that sends notifications of price increases and other frequent notifications."""
