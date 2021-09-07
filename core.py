@@ -17,15 +17,19 @@ lst_of_available_currencies = []  # List of all cryptocurrencies available on co
 lst_name_of_cryptocurrencies_to_live_price = ["BTC"]
 # List of cryptocurrency names to be sent in the live price definition.
 
-dct_of_currencies_and_price_main = {}  # A dictionary that holds cryptocurrency prices downloaded from api.
+# A dictionary that holds cryptocurrency prices downloaded from api.
+dct_of_currencies_and_price_main = {}
 # The entire program refers to it if it wants to know the price of a cryptocurrency.
-dct_name_value_breakpoint = {}  # A dictionary that keeps the names and values of cryptocurrencies with levels
+# A dictionary that keeps the names and values of cryptocurrencies with levels
+dct_name_value_breakpoint = {}
 # when an alert is to be triggered.
 
-time_update = 600  # Every how many seconds a price update is to be sent. This is the default value and can be
+# Every how many seconds a price update is to be sent. This is the default value and can be
+time_update = 600
 # changed by the user.
 
-time_update_stop = False  # Variable that tells the program whether price updates are to be sent.
+# Variable that tells the program whether price updates are to be sent.
+time_update_stop = False
 
 count_coinbase_main_1 = 0
 # The variable informs the program whether the value has been downloaded from the API once. If so, the program
@@ -100,7 +104,8 @@ def get_currently_price_of_currency(name):
 def coinbase_get_price():
     global lst_of_available_currencies, dct_of_currencies_and_price_main, count_coinbase_main_1
 
-    get_all_available_crypto()  # runs a function that gets the names of all available currencies
+    # runs a function that gets the names of all available currencies
+    get_all_available_crypto()
 
     while True:
         lst_local_of_currencies_and_price = []
@@ -117,7 +122,8 @@ def coinbase_get_price():
 
         if dct_of_currencies_and_price_main:
             for key, value in dct_name_price.items():
-                dct_of_currencies_and_price_main[key].append(round(float(value), 4))
+                dct_of_currencies_and_price_main[key].append(
+                    round(float(value), 4))
         else:
             for key, value in dct_name_price.items():
                 d_let1 = {}
@@ -194,8 +200,10 @@ def live_price_of_cryptocurrencies():
                 dct_start_price.update(d1)
 
             current_price = get_currently_price_of_currency(name)
-            percentage = percentage_calculator(current_price, dct_start_price[name])
-            current_price_print = name + " " + str(percentage) + "% | " + str(current_price) + " USD"
+            percentage = percentage_calculator(
+                current_price, dct_start_price[name])
+            current_price_print = name + " " + \
+                str(percentage) + "% | " + str(current_price) + " USD"
 
             bot.send_message(chat_id=1181399908, text=current_price_print)
 
@@ -228,12 +236,14 @@ def price_alert_monitor():
             try:
                 if type(sell_price) is not type:
                     if float(current_price) >= sell_price and dct_name_value_breakpoint[key]["up"][1] is False:
-                        alert_price(f"Alert price for sell! The price has hit the high end. | {current_price_print}")
+                        alert_price(
+                            f"Alert price for sell! The price has hit the high end. | {current_price_print}")
                         alert_price(f"Update brake point of price.")
                         dct_name_value_breakpoint[key]["up"][1] = True
                 if type(buy_price) is not type:
                     if float(current_price) <= buy_price and dct_name_value_breakpoint[key]["down"][1] is False:
-                        alert_price(f"Alert price for sell! The price has hit the high end. | {current_price_print}")
+                        alert_price(
+                            f"Alert price for sell! The price has hit the high end. | {current_price_print}")
                         alert_price(f"Update brake point of price.")
                         dct_name_value_breakpoint[key]["down"][1] = True
             except KeyError:
@@ -279,13 +289,17 @@ class BigDifferencesInPrices:
             self.dct_of_currencies_and_price_current.clear()
             self.dct_of_currencies_and_price_current = self.check_all_price()
 
-            lst_local_start_price = list(dct_of_currencies_and_price_start.values())  # list of values from dct
-            lst_local_current_price = list(self.dct_of_currencies_and_price_current.values())  # list of values from dct
+            lst_local_start_price = list(
+                dct_of_currencies_and_price_start.values())  # list of values from dct
+            lst_local_current_price = list(
+                self.dct_of_currencies_and_price_current.values())  # list of values from dct
 
             for i in range(len(lst_local_start_price)):
-                percentage = percentage_calculator(lst_local_current_price[i], lst_local_start_price[i])
+                percentage = percentage_calculator(
+                    lst_local_current_price[i], lst_local_start_price[i])
                 if percentage >= 4 or percentage <= -4:
-                    self.check_percentage(percentage, lst_local_current_price[i])
+                    self.check_percentage(
+                        percentage, lst_local_current_price[i])
 
             sleep(10)
 
@@ -309,12 +323,14 @@ class BigDifferencesInPrices:
                 name_crypto = key1
 
         if name_crypto not in self.dct_of_alert_name_percentage:
-            self.dct_of_alert_name_percentage.update({name_crypto: int(percentage)})
+            self.dct_of_alert_name_percentage.update(
+                {name_crypto: int(percentage)})
             bot.send_message(chat_id=1181399908,
                              text=f"Alert price {name_crypto} {percentage}% | {price}")
         else:
             if int(percentage) != self.dct_of_alert_name_percentage[name_crypto]:
-                self.dct_of_alert_name_percentage.update({name_crypto: int(percentage)})
+                self.dct_of_alert_name_percentage.update(
+                    {name_crypto: int(percentage)})
                 bot.send_message(chat_id=1181399908,
                                  text=f"Alert price {name_crypto} {percentage}% | {price}")
 
@@ -330,12 +346,15 @@ with open("key.json", 'r') as f:
     telegram_api_main = api_keys["telegram"]["main"]
     telegram_api_dev = api_keys["telegram"]["dev"]
 
+    telegram_api_main2 = api_keys["telegram2"]["main"]
+
 # bot = Bot("telegram_api_main")  # main
 bot = Bot(telegram_api_dev)  # dev
 
 
 def start_command(update, context):
-    update.message.reply_text("This is premium private bot. You can't use it without permission")
+    update.message.reply_text(
+        "This is premium private bot. You can't use it without permission")
     # json_id = update
     # id_of_chat = json_id["message"]["chat"]["id"]
     # print(id_of_chat)
@@ -375,16 +394,19 @@ def change_settings(update, context):
         update.message.reply_text("time'minutes' => e.g. => [time10] | "
                                   "Every how many minutes notifications about the price of cryptocurrencies are "
                                   "to be sent.")
-        update.message.reply_text("add'name_crypto' => e.g. => [addbtc] | Adding any cryptocurrency to the live price.")
+        update.message.reply_text(
+            "add'name_crypto' => e.g. => [addbtc] | Adding any cryptocurrency to the live price.")
         update.message.reply_text("remove'name_crypto' => e.g. => [removebtc] | "
                                   "Remove any cryptocurrency in the live price.")
-        update.message.reply_text("tstart | Running Live Price (enabled by default).")
+        update.message.reply_text(
+            "tstart | Running Live Price (enabled by default).")
         update.message.reply_text("tstop | Live price exclusion.")
         update.message.reply_text("price'name_crypto' => e.g. => [pricebtc] | "
                                   "Knowing the price of any cryptocurrency.")
     elif text[:2] == "up":
         if count_coinbase_main_1 == 0:
-            update.message.reply_text("Wait for the program to fully start and try again.")
+            update.message.reply_text(
+                "Wait for the program to fully start and try again.")
             return
 
         try:
@@ -392,19 +414,23 @@ def change_settings(update, context):
             name_crypto = text[3:lst_local_setting[1]].upper()
             sell_price = float(text[lst_local_setting[1] + 1:])
 
-            update.message.reply_text(f"The upper {name_crypto} price up set to: {sell_price}")
+            update.message.reply_text(
+                f"The upper {name_crypto} price up set to: {sell_price}")
 
             if name_crypto not in dct_name_value_breakpoint:
-                dct_name_value_breakpoint.update({name_crypto: {"up": [sell_price, False]}})
+                dct_name_value_breakpoint.update(
+                    {name_crypto: {"up": [sell_price, False]}})
             else:
-                dct_name_value_breakpoint[name_crypto].update({"up": [sell_price, False]})
+                dct_name_value_breakpoint[name_crypto].update(
+                    {"up": [sell_price, False]})
 
         except ValueError:
             update.message.reply_text(
                 "Error! Please enter the correct form. If you do not know how, please enter help.")
     elif text[:4] == "down":
         if count_coinbase_main_1 == 0:
-            update.message.reply_text("Wait for the program to fully start and try again.")
+            update.message.reply_text(
+                "Wait for the program to fully start and try again.")
             return
 
         try:
@@ -412,12 +438,15 @@ def change_settings(update, context):
             name_crypto = text[5:lst_local_setting[1]].upper()
             buy_price = float(text[lst_local_setting[1] + 1:])
 
-            update.message.reply_text(f"The lower {name_crypto} price has been set to: {buy_price}")
+            update.message.reply_text(
+                f"The lower {name_crypto} price has been set to: {buy_price}")
 
             if name_crypto not in dct_name_value_breakpoint:
-                dct_name_value_breakpoint.update({name_crypto: {"down": [buy_price, False]}})
+                dct_name_value_breakpoint.update(
+                    {name_crypto: {"down": [buy_price, False]}})
             else:
-                dct_name_value_breakpoint[name_crypto].update({"down": [buy_price, False]})
+                dct_name_value_breakpoint[name_crypto].update(
+                    {"down": [buy_price, False]})
         except ValueError:
             update.message.reply_text("Error! Enter a value")
     elif text[:4] == "time":
@@ -429,15 +458,18 @@ def change_settings(update, context):
             update.message.reply_text("Can't to be float or empty.")
     elif text[:6] == "tstart":
         time_update_stop = False
-        update.message.reply_text("Send message with live price of crypto is start.")
+        update.message.reply_text(
+            "Send message with live price of crypto is start.")
     elif text[:5] == "tstop":
         time_update_stop = True
-        update.message.reply_text("Send message with live price of crypto is stop.")
+        update.message.reply_text(
+            "Send message with live price of crypto is stop.")
     elif text[:3] == "add":
         name_crypto = text[3:].upper()
         if name_crypto in lst_of_available_currencies:
             lst_name_of_cryptocurrencies_to_live_price.append(name_crypto)
-            update.message.reply_text(f"{name_crypto} has been added to the live price.")
+            update.message.reply_text(
+                f"{name_crypto} has been added to the live price.")
         else:
             update.message.reply_text("The given cryptocurrency does not exist or has not been loaded yet. "
                                       "Please try again in a minute!")
@@ -445,9 +477,11 @@ def change_settings(update, context):
         try:
             name_crypto = text[6:].upper()
             lst_name_of_cryptocurrencies_to_live_price.remove(name_crypto)
-            update.message.reply_text(f"{name_crypto} has been remove from live price.")
+            update.message.reply_text(
+                f"{name_crypto} has been remove from live price.")
         except ValueError:
-            update.message.reply_text("The cryptocurrency with the given name is not on the list.")
+            update.message.reply_text(
+                "The cryptocurrency with the given name is not on the list.")
     elif text[:5] == "price":
         update.message.reply_text(price_on_request(text[5:]))
 
@@ -473,12 +507,19 @@ def telegram_main():
 
 def price_lvl_alert(price, price_print, up_lvl, down_lvl):
     if float(price) >= up_lvl:
-        alert_price(f"Alert price for sell! The price has hit the high end. | {price_print}")
+        alert_price(
+            f"Alert price for sell! The price has hit the high end. | {price_print}")
         alert_price(f"Update brake point of price.")
         return 1
     elif float(price) <= down_lvl:
-        alert_price(f"Alert price for buy! The price has hit the low end. | {price_print}")
+        alert_price(
+            f"Alert price for buy! The price has hit the low end. | {price_print}")
         alert_price(f"Update brake point of price.")
         return 2
     else:
         return True
+
+
+"""A place for a Telegram bot that sends notifications of price increases and other frequent notifications."""
+
+bot2 = Bot()
