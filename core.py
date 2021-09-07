@@ -205,7 +205,8 @@ def live_price_of_cryptocurrencies():
             current_price_print = name + " " + \
                 str(percentage) + "% | " + str(current_price) + " USD"
 
-            bot.send_message(chat_id=1181399908, text=current_price_print)
+            bot_settings.send_message(
+                chat_id=1181399908, text=current_price_print)
 
         count = 0
         while True:
