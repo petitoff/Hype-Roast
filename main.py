@@ -11,8 +11,10 @@ thread2 = Thread(target=telegram_main)
 thread3 = Thread(target=live_price_of_cryptocurrencies)
 # get alert price if BTC break set price via telegram
 thread4 = Thread(target=price_alert_monitor)
+
+
 thread5 = Thread(
-    target=BigDifferencesInPrices().main_alert_price_all_crypto)  # get alert price of all crypto if price if fast
+    target=runBigDifferencesInPrices.main_alert_price_all_crypto)  # get alert price of all crypto if price if fast
 # change
 
 

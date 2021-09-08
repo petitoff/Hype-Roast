@@ -209,6 +209,7 @@ def live_price_of_cryptocurrencies():
                 chat_id=1181399908, text=current_price_print)
 
         count = 0
+        print("test")
         while True:
             count += 1
             if count >= time_update:
@@ -350,7 +351,7 @@ class BigDifferencesInPrices:
         else:
             return "The value you entered exceeds the size of the list. Provide less value!"
 
-
+runBigDifferencesInPrices = BigDifferencesInPrices()
 """
 This is place for telegram bot. Put here api key and other custom stuff.
 """
@@ -512,7 +513,8 @@ def change_settings(update, context):
         name_crypto = text[5:lst_local_setting[1]].upper()
         how_much = int(text[lst_local_setting[1] + 1:])
 
-        send_message = BigDifferencesInPrices().checking_recent_alerts(
+        # from main import runBigDifferencesInPrices
+        send_message = runBigDifferencesInPrices.checking_recent_alerts(
             name_crypto, how_much)
         update.message.reply_text(send_message)
 
@@ -525,7 +527,7 @@ def telegram_main():
     # updater = Updater(telegram_api_main, use_context=True)  # main
     # updater = Updater(telegram_api_dev, use_context=True)  # for dev and test
 
-    updater = Updater(telegram_setttings_api_main)
+    updater = Updater(telegram_setttings_api_main, use_context=True)
 
     dp = updater.dispatcher
 
