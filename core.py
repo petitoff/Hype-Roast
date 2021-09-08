@@ -209,7 +209,6 @@ def live_price_of_cryptocurrencies():
                 chat_id=1181399908, text=current_price_print)
 
         count = 0
-        print("test")
         while True:
             count += 1
             if count >= time_update:
