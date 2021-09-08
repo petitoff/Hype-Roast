@@ -12,6 +12,7 @@ from telegram.ext import *
 from coinbase.wallet.client import Client
 from coinbase.wallet.error import AuthenticationError, ExpiredTokenError
 
+
 """Global variables, lists and dictionaries are placed here."""
 lst_of_available_currencies = []  # List of all cryptocurrencies available on coinbase.
 lst_name_of_cryptocurrencies_to_live_price = ["BTC"]
@@ -340,6 +341,7 @@ class BigDifferencesInPrices:
 
     def checking_recent_alerts(self, name, how_much):
         try:
+            print(self.dct_of_alert_name_percentage)
             lst_price = self.dct_of_alert_name_percentage[name]
         except KeyError:
             return "The name you entered is not listed."
@@ -512,7 +514,9 @@ def change_settings(update, context):
         name_crypto = text[5:lst_local_setting[1]].upper()
         how_much = int(text[lst_local_setting[1] + 1:])
 
-        send_message = BigDifferencesInPrices().checking_recent_alerts(
+        from main import runBigDifferencesInPrice
+
+        send_message = runBigDifferencesInPrice.checking_recent_alerts(
             name_crypto, how_much)
         update.message.reply_text(send_message)
 

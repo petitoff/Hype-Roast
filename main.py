@@ -1,14 +1,22 @@
 import time
 
-import core
+# import core
 from core import *
 
-thread1 = Thread(target=coinbase_get_price)  # telegram bot and sending message (all api and other main def)
-thread2 = Thread(target=telegram_main)  # telegram bot and sending message (all api and other main def)
-thread3 = Thread(target=live_price_of_cryptocurrencies)  # get live price of BTC and send message via telegram
-thread4 = Thread(target=price_alert_monitor)  # get alert price if BTC break set price via telegram
+
+# telegram bot and sending message (all api and other main def)
+thread1 = Thread(target=coinbase_get_price)
+# telegram bot and sending message (all api and other main def)
+thread2 = Thread(target=telegram_main)
+# get live price of BTC and send message via telegram
+thread3 = Thread(target=live_price_of_cryptocurrencies)
+# get alert price if BTC break set price via telegram
+thread4 = Thread(target=price_alert_monitor)
+
+runBigDifferencesInPrice = BigDifferencesInPrices()
+
 thread5 = Thread(
-    target=BigDifferencesInPrices().main_alert_price_all_crypto)  # get alert price of all crypto if price if fast
+    target=runBigDifferencesInPrice.main_alert_price_all_crypto)  # get alert price of all crypto if price if fast
 # change
 
 
@@ -21,7 +29,7 @@ thread2.start()
 try:
     while True:
         time.sleep(1)
-        if core.count_coinbase_main_1 == 1:
+        if count_coinbase_main_1 == 1:
             thread3.setDaemon(True)
             thread3.start()
 
