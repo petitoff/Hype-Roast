@@ -1,4 +1,5 @@
 import json
+from os import name
 import urllib
 import urllib.request
 import requests
@@ -432,6 +433,10 @@ def change_settings(update, context):
             name_crypto = text[3:lst_local_setting[1]].upper()
             sell_price = float(text[lst_local_setting[1] + 1:])
 
+            if name_crypto not in lst_of_available_currencies:
+                update.message.reply_text("The cryptocurrency is not listed. Check for typos!")
+                return
+
             update.message.reply_text(
                 f"The upper {name_crypto} price up set to: {sell_price}")
 
@@ -455,6 +460,10 @@ def change_settings(update, context):
             lst_local_setting = [i for i, ltr in enumerate(text) if ltr == " "]
             name_crypto = text[5:lst_local_setting[1]].upper()
             buy_price = float(text[lst_local_setting[1] + 1:])
+            
+            if name_crypto not in lst_of_available_currencies:
+                update.message.reply_text("The cryptocurrency is not listed. Check for typos!")
+                return
 
             update.message.reply_text(
                 f"The lower {name_crypto} price has been set to: {buy_price}")
