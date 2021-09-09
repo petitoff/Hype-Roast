@@ -285,7 +285,7 @@ class BigDifferencesInPrices:
         while True:
             current_time = time.time()
             current_time -= start_time
-            if current_time >= 86400:
+            if current_time >= 3600:
                 start_time = time.time()
                 dct_of_currencies_and_price_start.clear()
                 dct_of_currencies_and_price_start = self.check_all_price()
