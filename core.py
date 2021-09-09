@@ -512,7 +512,6 @@ def change_settings(update, context):
         name_crypto = text[5:lst_local_setting[1]].upper()
         how_much = int(text[lst_local_setting[1] + 1:])
 
-        # from main import runBigDifferencesInPrices
         send_message = runBigDifferencesInPrices.checking_recent_alerts(
             name_crypto, how_much)
         update.message.reply_text(send_message)
