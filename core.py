@@ -351,6 +351,7 @@ class BigDifferencesInPrices:
         else:
             return "The value you entered exceeds the size of the list. Provide less value!"
 
+
 runBigDifferencesInPrices = BigDifferencesInPrices()
 """
 This is place for telegram bot. Put here api key and other custom stuff.
@@ -406,7 +407,7 @@ def change_settings(update, context):
     text = str(update.message.text).lower()
     if text[:4] == "help":
         update.message.reply_text("You can use:")
-        update.message.reply_text("up 'name_crypto price => e.g. => [up btc 40000] | "
+        update.message.reply_text("up 'name_crypto' price => e.g. => [up btc 40000] | "
                                   "This is for the upper limit of the price.")
         update.message.reply_text("down 'name_crypto' 'price' => e.g. => [down btc 35000] | "
                                   "This is for the downer limit of the price.")
@@ -422,6 +423,9 @@ def change_settings(update, context):
         update.message.reply_text("tstop | Live price exclusion.")
         update.message.reply_text("price'name_crypto' => e.g. => [pricebtc] | "
                                   "Knowing the price of any cryptocurrency.")
+        update.message.reply_text(
+            "last 'name_crypto' 'how_many' => e.g. => [last btc 1]")
+
     elif text[:2] == "up":
         if count_coinbase_main_1 == 0:
             update.message.reply_text(
@@ -434,7 +438,8 @@ def change_settings(update, context):
             sell_price = float(text[lst_local_setting[1] + 1:])
 
             if name_crypto not in lst_of_available_currencies:
-                update.message.reply_text("The cryptocurrency is not listed. Check for typos!")
+                update.message.reply_text(
+                    "The cryptocurrency is not listed. Check for typos!")
                 return
 
             update.message.reply_text(
@@ -460,9 +465,10 @@ def change_settings(update, context):
             lst_local_setting = [i for i, ltr in enumerate(text) if ltr == " "]
             name_crypto = text[5:lst_local_setting[1]].upper()
             buy_price = float(text[lst_local_setting[1] + 1:])
-            
+
             if name_crypto not in lst_of_available_currencies:
-                update.message.reply_text("The cryptocurrency is not listed. Check for typos!")
+                update.message.reply_text(
+                    "The cryptocurrency is not listed. Check for typos!")
                 return
 
             update.message.reply_text(
