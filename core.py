@@ -267,6 +267,8 @@ def price_on_request(name):
         return current_price_print
     except urllib.error.HTTPError:
         return "error"
+    except http.client.InvalidURL:
+        return "error"
 
 
 """
@@ -512,7 +514,6 @@ def change_settings(update, context):
             update.message.reply_text(
                 f"There is no such cryptocurrency as \"{text[5:]}\"")
     elif text[:8] == "tendency":
-
         if count_coinbase_main_1 == 0:
             update.message.reply_text(
                 "Wait for the program to fully start and try again.")
