@@ -507,12 +507,16 @@ def change_settings(update, context):
             update.message.reply_text(
                 "The cryptocurrency with the given name is not on the list.")
     elif text[:5] == "price":
-        a = price_on_request(text[5:])
-        if a != "error":
-            update.message.reply_text(a)
+        index1 = text.find(" ")
+        name_crypto = text[index1+1:].upper()
+
+        price = price_on_request(name_crypto)
+
+        if price != "error":
+            update.message.reply_text(price)
         else:
             update.message.reply_text(
-                f"There is no such cryptocurrency as \"{text[5:]}\"")
+                f"There is no such cryptocurrency as \"{name_crypto}\"")
     elif text[:8] == "tendency":
         if count_coinbase_main_1 == 0:
             update.message.reply_text(
