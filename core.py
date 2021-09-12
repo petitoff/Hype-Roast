@@ -267,7 +267,7 @@ def price_on_request(name):
         return current_price_print
     except urllib.error.HTTPError:
         return "error"
-    except http.client.InvalidURL:
+    except urllib.request.HTTPBasicAuthHandler.client.InvalidURL:
         return "error"
 
 
