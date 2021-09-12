@@ -512,13 +512,26 @@ def change_settings(update, context):
             update.message.reply_text(
                 f"There is no such cryptocurrency as \"{text[5:]}\"")
     elif text[:8] == "tendency":
-        lst_local_setting = [i for i, ltr in enumerate(text) if ltr == " "]
-        name_crypto = text[8:lst_local_setting[1]].upper()
-        how_much = int(text[lst_local_setting[1] + 1:])
 
-        send_message = runBigDifferencesInPrices.checking_recent_alerts(
-            name_crypto, how_much)
-        update.message.reply_text(send_message)
+        if count_coinbase_main_1 == 0:
+            update.message.reply_text(
+                "Wait for the program to fully start and try again.")
+            return
+
+        index1 = text.find(" ")
+        name_crypto = text[index1+1:].upper()
+
+        lst_of_price = dct_of_currencies_and_price_main[name_crypto][-60:]
+
+        sum_lst_of_price = sum(lst_of_price)
+
+        if sum_lst_of_price > 0:
+            update.message.reply_text(f"{name_crypto} has an upward trend.")
+        elif sum_lst_of_price == 0:
+            update.message.reply_text(
+                f"{name_crypto} has a constant tendency.")
+        elif sum_lst_of_price < 0:
+            update.message.reply_text(f"{name_crypto} has a downward trend.")
 
 
 def alert_price(message_alert):
