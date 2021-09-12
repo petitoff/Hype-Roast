@@ -528,14 +528,17 @@ def change_settings(update, context):
 
         lst_of_price = dct_of_currencies_and_price_main[name_crypto][-60:]
 
-        sum_lst_of_price = sum(lst_of_price)
+        first = lst_of_price[0]
+        last = lst_of_price[-1]
 
-        if sum_lst_of_price > 0:
+        price_tendency = first - last
+
+        if price_tendency > 0:
             update.message.reply_text(f"{name_crypto} has an upward trend.")
-        elif sum_lst_of_price == 0:
+        elif price_tendency == 0:
             update.message.reply_text(
                 f"{name_crypto} has a constant tendency.")
-        elif sum_lst_of_price < 0:
+        elif price_tendency < 0:
             update.message.reply_text(f"{name_crypto} has a downward trend.")
 
 
