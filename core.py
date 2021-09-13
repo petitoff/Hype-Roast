@@ -566,5 +566,5 @@ def telegram_main():
 
 """A place for a Telegram bot that sends notifications of price increases and other frequent notifications."""
 
-bot = Bot("telegram_api_main")  # main
+bot = Bot(telegram_api_main)  # main
 # bot = Bot(telegram_api_dev)  # dev
