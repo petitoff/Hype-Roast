@@ -350,6 +350,7 @@ This is place for telegram bot. Put here api key and other custom stuff.
 
 # here create global variables for telegram module
 
+
 with open("key.json", 'r') as f:
     api_keys = json.loads(f.read())
     telegram_setttings_api_main = api_keys["telegram2"]["main"]
@@ -565,5 +566,5 @@ def telegram_main():
 
 """A place for a Telegram bot that sends notifications of price increases and other frequent notifications."""
 
-# bot = Bot("telegram_api_main")  # main
-bot = Bot(telegram_api_dev)  # dev
+bot = Bot("telegram_api_main")  # main
+# bot = Bot(telegram_api_dev)  # dev
