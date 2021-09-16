@@ -354,6 +354,7 @@ This is place for telegram bot. Put here api key and other custom stuff.
 with open("key.json", 'r') as f:
     api_keys = json.loads(f.read())
     telegram_setttings_api_main = api_keys["telegram2"]["main"]
+    telegram_setttings_api_dev = api_keys["telegram2"]["dev"]
 
     telegram_api_main = api_keys["telegram"]["main"]
     telegram_api_dev = api_keys["telegram"]["dev"]
@@ -361,7 +362,7 @@ with open("key.json", 'r') as f:
 # bot = Bot("telegram_api_main")  # main
 # bot = Bot(telegram_api_dev)  # dev
 
-bot_settings = Bot(telegram_setttings_api_main)
+bot_settings = Bot(telegram_setttings_api_dev)
 
 
 def start_command(update, context):
@@ -551,7 +552,7 @@ def telegram_main():
     # updater = Updater(telegram_api_main, use_context=True)  # main
     # updater = Updater(telegram_api_dev, use_context=True)  # for dev and test
 
-    updater = Updater(telegram_setttings_api_main, use_context=True)
+    updater = Updater(telegram_setttings_api_dev, use_context=True)
 
     dp = updater.dispatcher
 
