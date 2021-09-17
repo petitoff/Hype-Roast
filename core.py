@@ -123,12 +123,11 @@ def coinbase_get_price():
 
         if dct_of_currencies_and_price_main:
             for key, value in dct_name_price.items():
-                dct_of_currencies_and_price_main[key].append(
-                    round(float(value), 4))
+                dct_of_currencies_and_price_main[key].append(float(value))
         else:
             for key, value in dct_name_price.items():
                 d_let1 = {}
-                lst_let1 = [round(float(value), 4)]
+                lst_let1 = [float(value)]
 
                 d_let1[key] = lst_let1
                 dct_of_currencies_and_price_main.update(d_let1)
@@ -567,5 +566,5 @@ def telegram_main():
 
 """A place for a Telegram bot that sends notifications of price increases and other frequent notifications."""
 
-bot = Bot(telegram_api_main)  # main
-# bot = Bot(telegram_api_dev)  # dev
+# bot = Bot(telegram_api_main)  # main
+bot = Bot(telegram_api_dev)  # dev
