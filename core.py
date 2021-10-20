@@ -202,8 +202,7 @@ def live_price_of_cryptocurrencies():
             current_price = get_currently_price_of_currency(name)
             percentage = percentage_calculator(
                 current_price, dct_start_price[name])
-            current_price_print = name + " " + \
-                                  str(percentage) + "% | " + str(current_price) + " USD"
+            current_price_print = name + " " + str(percentage) + "% | " + str(current_price) + " USD"
 
             bot_settings.send_message(
                 chat_id=1181399908, text=current_price_print)
