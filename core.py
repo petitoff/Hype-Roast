@@ -203,7 +203,7 @@ def live_price_of_cryptocurrencies():
             percentage = percentage_calculator(
                 current_price, dct_start_price[name])
             current_price_print = name + " " + \
-                str(percentage) + "% | " + str(current_price) + " USD"
+                                  str(percentage) + "% | " + str(current_price) + " USD"
 
             bot_settings.send_message(
                 chat_id=1181399908, text=current_price_print)
@@ -301,7 +301,7 @@ class BigDifferencesInPrices:
             for i in range(len(lst_local_start_price)):
                 percentage = percentage_calculator(
                     lst_local_current_price[i], lst_local_start_price[i])
-                if percentage >= 4 or percentage <= -4:
+                if percentage >= 10 or percentage <= -10:
                     self.check_percentage(
                         percentage, lst_local_current_price[i])
 
@@ -340,6 +340,7 @@ class BigDifferencesInPrices:
 
 
 runBigDifferencesInPrices = BigDifferencesInPrices()
+"""Crypto pattern and similarity search section. An attempt to predict prices."""
 
 """
 This is place for telegram bot. Put here api key and other custom stuff.
@@ -505,7 +506,7 @@ def change_settings(update, context):
                 "The cryptocurrency with the given name is not on the list.")
     elif text[:5] == "price":
         index1 = text.find(" ")
-        name_crypto = text[index1+1:].upper()
+        name_crypto = text[index1 + 1:].upper()
 
         price = price_on_request(name_crypto)
 
