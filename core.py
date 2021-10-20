@@ -1,5 +1,5 @@
 import json
-from os import name
+# from os import name
 import urllib
 import urllib.request
 import requests
@@ -218,8 +218,6 @@ def live_price_of_cryptocurrencies():
 
 def price_alert_monitor():
     global dct_name_value_breakpoint
-    a = True
-
     while True:
         for key in dct_name_value_breakpoint.keys():
             current_price = get_currently_price_of_currency(key)
@@ -415,8 +413,6 @@ def change_settings(update, context):
         update.message.reply_text("tstop | Live price exclusion.")
         update.message.reply_text("price'name_crypto' => e.g. => [pricebtc] | "
                                   "Knowing the price of any cryptocurrency.")
-        update.message.reply_text(
-            "last 'name_crypto' 'how_many' => e.g. => [last btc 1]")
 
     elif text[:2] == "up":
         if count_coinbase_main_1 == 0:
@@ -518,29 +514,6 @@ def change_settings(update, context):
         else:
             update.message.reply_text(
                 f"There is no such cryptocurrency as \"{name_crypto}\"")
-    elif text[:8] == "tendency":
-        if count_coinbase_main_1 == 0:
-            update.message.reply_text(
-                "Wait for the program to fully start and try again.")
-            return
-
-        index1 = text.find(" ")
-        name_crypto = text[index1+1:].upper()
-
-        lst_of_price = dct_of_currencies_and_price_main[name_crypto][-60:]
-
-        first = lst_of_price[0]
-        last = lst_of_price[-1]
-
-        price_tendency = first - last
-
-        if price_tendency > 0:
-            update.message.reply_text(f"{name_crypto} has an upward trend.")
-        elif price_tendency == 0:
-            update.message.reply_text(
-                f"{name_crypto} has a constant tendency.")
-        elif price_tendency < 0:
-            update.message.reply_text(f"{name_crypto} has a downward trend.")
 
 
 def alert_price(message_alert):
